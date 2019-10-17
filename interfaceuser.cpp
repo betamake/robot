@@ -28,7 +28,7 @@ void interfaceUser::run()
 
 }
 /*
-@brief:处理用户返回的信息
+@brief:处理用户返回的信息，并且成功之后发送处理信号。信号由票据接口和主程序端跳转使用。
 @param:无
 @return:无
 @time:2019-10-17
