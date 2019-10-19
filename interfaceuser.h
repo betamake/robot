@@ -10,6 +10,10 @@
 #include <QJsonObject>
 #include<QJsonDocument>
 #include <httprequest.h>
+/*
+@brief:后端接口类
+@time:2019-10-17
+*/
 class interfaceUser : public QThread
 {
     Q_OBJECT

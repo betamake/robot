@@ -15,14 +15,14 @@ interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
 */
 void interfaceUser::run()
 {
-    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *reply)));
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));
     QJsonObject loginJsonObject;
     loginJsonObject.insert ("password",this->getPassword());
     loginJsonObject.insert ("username",this->getUsername());
     QJsonDocument document;
     document.setObject (loginJsonObject);
     QByteArray loginArray = document.toJson (QJsonDocument::Compact);
-    QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/1ogin"));
+    QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/10gin"));
     QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
     mainMangerNetwork->setCookieJar (managerJar);
 
@@ -54,7 +54,7 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                     QJsonValue dataVal = object.take("msg");
                     msg = dataVal.toString ();
                     this->setLoginMsg(msg);
-                    if (msg =="登陆成功")
+                    if (msg =="登录成功")
                     {
                         if(object.contains("data"))
                         {
@@ -67,7 +67,7 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                                     name = nameVal.toString ();
                                     this->setRealName(name);
                                 }
-                                    emit UserLoginDone (this->getRealName(),this->getLoginMsg());
+//                                emit UserLoginDone (this->getRealName(),this->getLoginMsg());
                             }
                         }
 
@@ -75,6 +75,6 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                 }
            }
         }
+        emit UserLoginDone (this->getRealName(),this->getLoginMsg());
     }
-
 }
