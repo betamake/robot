@@ -134,6 +134,7 @@ void MainWindow::on_RegAcountBtn_clicked()
     faceReg::getinstance ()->CameraInfo.getcamera ()->start();
     faceReg::getinstance ()->moveToThread (faceReg::getinstance ()); //解决类不在一个线程
     faceReg::getinstance ()->start ();
+    this->setCurrentIndex(4);
     connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
     connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
 }
@@ -182,4 +183,9 @@ void MainWindow::on_firstButton_clicked()
 void MainWindow::on_idCardButton_clicked()
 {
 
+}
+
+void MainWindow::on_shouyePostButton_clicked()
+{
+    this->setCurrentIndex(6);
 }

@@ -38,6 +38,10 @@ private slots:
     
     void on_firstButton_clicked();
 
+    void on_idCardButton_clicked();
+
+    void on_shouyePostButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号

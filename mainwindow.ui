@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="huanYingYe">
      <layout class="QGridLayout" name="gridLayout">
@@ -681,55 +681,62 @@
        <rect>
         <x>0</x>
         <y>10</y>
-        <width>751</width>
+        <width>795</width>
         <height>80</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="zhichuButton">
          <property name="text">
           <string>支出凭证</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="chaiLvButton">
          <property name="text">
           <string>差旅报销</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="chuguoButton">
          <property name="text">
           <string>出国报销</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="qingkuanButton">
          <property name="text">
           <string>请款单</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="huankuanButton">
          <property name="text">
           <string>还款单</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="neibuButton">
+         <property name="text">
+          <string>内部转调账</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="lingyongButton">
          <property name="text">
           <string>领用单</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="zhanshouButton">
          <property name="text">
           <string>暂收单</string>
          </property>
@@ -737,7 +744,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="documentTableWidget">
       <property name="geometry">
        <rect>
         <x>-10</x>
