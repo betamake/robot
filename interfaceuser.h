@@ -62,8 +62,6 @@ private:
     QNetworkAccessManager *mainMangerNetwork;
     QString ipAddress;
     httpRequest HttpRequest;
-
-
 };
 
 #endif // INTERFACEUSER_H

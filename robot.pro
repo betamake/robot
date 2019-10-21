@@ -24,14 +24,18 @@ SOURCES += \
     httprequest.cpp \
     interfaceuser.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qaudiolevel.cpp \
+    voicecontrol.cpp
 
 HEADERS += \
     cameradevice.h \
     facereg.h \
     httprequest.h \
     interfaceuser.h \
-    mainwindow.h
+    mainwindow.h \
+    qaudiolevel.h \
+    voicecontrol.h
 
 FORMS += \
     mainwindow.ui
