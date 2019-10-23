@@ -79,6 +79,12 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
         emit UserLoginDone (this->getRealName(),this->getLoginMsg());
     }
 }
+/*
+@brief:获取报销单单据号列表
+@param:无
+@return:无
+@time:2019-10-17
+*/
 void interfaceUser::getBillList()
 {
     connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
@@ -92,6 +98,12 @@ void interfaceUser::getBillList()
     QNetworkReply *reply = mainMangerNetwork->get (request);
 
 }
+/*
+@brief:处理报销单据号接口函数
+@param:无
+@return:无
+@time:2019-10-17
+*/
 void interfaceUser::dealGetBillList(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError)
@@ -122,6 +134,7 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     this->setBillCode(code);
                     this->setBillDate(billDate);
                     this->setBillMoney(moneyReim);
+                    emit sentDealBillListDone ();
                 }
             }
 

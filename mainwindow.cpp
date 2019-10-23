@@ -50,7 +50,7 @@ void MainWindow::on_accountLoginButton_clicked()
     InterfaceUser = new interfaceUser(); //用户接口对象
     InterfaceUser->setUsername(username);
     InterfaceUser->setPassword(password);
-    InterfaceUser->run();
+    InterfaceUser->start();
     connect(InterfaceUser,SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
 }
 /*
@@ -61,6 +61,8 @@ void MainWindow::on_accountLoginButton_clicked()
 */
 void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 {
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
     QString username = realName;
 
    QString msg = getMsg;
@@ -179,7 +181,12 @@ void MainWindow::on_firstButton_clicked()
 
 //    }
 }
-
+/*
+@brief:身份证
+@param:无
+@return:无
+@time:2019-10-19
+*/
 void MainWindow::on_idCardButton_clicked()
 {
 
@@ -188,4 +195,29 @@ void MainWindow::on_idCardButton_clicked()
 void MainWindow::on_shouyePostButton_clicked()
 {
     this->setCurrentIndex(6);
+}
+/*
+@brief:支出附件
+@param:无
+@return:无
+@time:2019-10-19
+*/
+void MainWindow::on_zhichuButton_clicked()
+{
+    InterfaceUser->setBillType ("FY");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhichuButton_slot()));
+
+}
+/*
+@brief:支出附件槽函数
+@param:无
+@return:无
+@time:2019-10-19
+*/
+void MainWindow::deal_zhichuButton_slot ()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
 }

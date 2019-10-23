@@ -42,6 +42,9 @@ private slots:
 
     void on_shouyePostButton_clicked();
 
+    void on_zhichuButton_clicked();
+    void deal_zhichuButton_slot();
+
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
