@@ -5,6 +5,10 @@
 #include <QString>
 #include <QByteArray>
 #include <QNetworkRequest>
+/*
+@brief:请求头封装类
+@time:2019-10-17
+*/
 class httpRequest : public QObject
 {
     Q_OBJECT

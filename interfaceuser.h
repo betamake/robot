@@ -10,6 +10,12 @@
 #include <QJsonObject>
 #include<QJsonDocument>
 #include <httprequest.h>
+#include <QUrlQuery>
+#include <QJsonArray>
+/*
+@brief:后端接口类
+@time:2019-10-17
+*/
 class interfaceUser : public QThread
 {
     Q_OBJECT
@@ -42,10 +48,44 @@ public:
     void setLoginMsg(const QString loginMsg){
         this->loginMsg = loginMsg;
     }
+    QString getBillType(){
+        return this->billType;
+    }
+    void setBillType(const QString billType){
+        this->billType = billType;
+    }
+    QString getBillCode(){
+        return this->billCode;
+    }
+    void setBillCode(const QString billCode)
+    {
+        this->billCode = billCode;
+    }
+    QString getBillDate(){
+        return this->billDate;
+    }
+    void setBillDate(const QString billDate){
+        this->billDate = billDate;
+    }
+    QString getBillMoney(){
+        return this->billMoney;
+    }
+    void setBillMoney(const QString billMoney)
+    {
+        this->billMoney = billMoney;
+    }
+    QString getBillUse(){
+        return this->billUse;
+    }
+    void setBillUse(const QString billUse){
+        this->billUse = billUse;
+    }
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
 public slots:
         void userLoginInterfaceReply(QNetworkReply *reply);
+        void getBillList();
+        void dealGetBillList(QNetworkReply *reply);
 private:
     //用户名密码
     QString username;
@@ -58,8 +98,12 @@ private:
     QNetworkAccessManager *mainMangerNetwork;
     QString ipAddress;
     httpRequest HttpRequest;
-
-
+    //
+    QString billType;
+    QString billCode;
+    QString billDate;
+    QString billMoney;
+    QString billUse;
 };
 
 #endif // INTERFACEUSER_H
