@@ -45,6 +45,21 @@ private slots:
     void on_zhichuButton_clicked();
     void deal_zhichuButton_slot();
 
+    void on_chaiLvButton_clicked();
+    void deal_chaiLvButton_slot();
+    void on_chuguoButton_clicked();
+    void deal_chuguoButton_slot();
+    void on_qingkuanButton_clicked();
+    void deal_qingkuanButton_slot();
+    void on_huankuanButton_clicked();
+    void deal_huankuanButton_slot();
+    void on_neibuButton_clicked();
+    void deal_neibuButton_slot();
+    void on_lingyongButton_clicked();
+    void deal_lingyongButton_slot();
+    void on_zhanshouButton_clicked();
+    void deal_zhanshouButton_slot();
+
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
