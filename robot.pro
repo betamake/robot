@@ -25,6 +25,8 @@ SOURCES += \
     interfaceuser.cpp \
     main.cpp \
     mainwindow.cpp \
+    windows/billitem.cpp \
+    windows/scheduleitem.cpp\
     qaudiolevel.cpp \
     voicecontrol.cpp
 
@@ -34,11 +36,16 @@ HEADERS += \
     httprequest.h \
     interfaceuser.h \
     mainwindow.h \
+    windows/billitem.h \
+    windows/scheduleitem.h\
     qaudiolevel.h \
     voicecontrol.h
 
+
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    windows/billitem.ui \
+    windows/scheduleitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

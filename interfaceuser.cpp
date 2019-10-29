@@ -3,8 +3,6 @@
 #include <QDebug>
 interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
 {
-    managerJar = new QNetworkCookieJar(this);
-    mainMangerNetwork = new QNetworkAccessManager(this);
     ipAddress = "http://211.157.179.73:9580";
     connect(this,SIGNAL(UserLoginDone(QString,QString)),this,SLOT(getBillList()));
 }
@@ -16,6 +14,8 @@ interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
 */
 void interfaceUser::run()
 {
+    managerJar = new QNetworkCookieJar();
+    mainMangerNetwork = new QNetworkAccessManager();
     connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));
     QJsonObject loginJsonObject;
     loginJsonObject.insert ("password",this->getPassword());
@@ -26,6 +26,7 @@ void interfaceUser::run()
     QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/10gin"));
     QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
     mainMangerNetwork->setCookieJar (managerJar);
+    exec();
 
 }
 /*
@@ -36,6 +37,7 @@ void interfaceUser::run()
 */
 void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
 {
+    qDebug()<<"进入槽函数";
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();
@@ -79,6 +81,12 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
         emit UserLoginDone (this->getRealName(),this->getLoginMsg());
     }
 }
+/*
+@brief:获取报销单单据号列表
+@param:无
+@return:无
+@time:2019-10-17
+*/
 void interfaceUser::getBillList()
 {
     connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
@@ -92,6 +100,12 @@ void interfaceUser::getBillList()
     QNetworkReply *reply = mainMangerNetwork->get (request);
 
 }
+/*
+@brief:处理报销单据号接口函数
+@param:无
+@return:无
+@time:2019-10-17
+*/
 void interfaceUser::dealGetBillList(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError)
@@ -122,6 +136,7 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     this->setBillCode(code);
                     this->setBillDate(billDate);
                     this->setBillMoney(moneyReim);
+                    emit sentDealBillListDone ();
                 }
             }
 

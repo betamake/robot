@@ -82,10 +82,12 @@ public:
     }
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
+    void sentDealBillListDone();
 public slots:
         void userLoginInterfaceReply(QNetworkReply *reply);
         void getBillList();
         void dealGetBillList(QNetworkReply *reply);
+
 private:
     //用户名密码
     QString username;
