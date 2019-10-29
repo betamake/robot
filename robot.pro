@@ -24,17 +24,23 @@ SOURCES += \
     httprequest.cpp \
     interfaceuser.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    windows/billitem.cpp \
+    windows/scheduleitem.cpp
 
 HEADERS += \
     cameradevice.h \
     facereg.h \
     httprequest.h \
     interfaceuser.h \
-    mainwindow.h
+    mainwindow.h \
+    windows/billitem.h \
+    windows/scheduleitem.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    windows/billitem.ui \
+    windows/scheduleitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
