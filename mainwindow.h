@@ -5,10 +5,9 @@
 #include "interfaceuser.h"
 #include "cameradevice.h"
 #include "facereg.h"
-
 #include "windows/billitem.h"
 #include "windows/scheduleitem.h"
-
+#include "voicecontrol.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -56,24 +55,35 @@ private slots:
 
     void on_emitCancelBtn_clicked();
 
-    void on_pushButton_2_clicked();
-    void on_pushButton_clicked();
-    void on_pushButton_4_clicked();
-    void on_pushButton_3_clicked();
-    void on_pushButton_7_clicked();
-    void on_pushButton_6_clicked();
-    void on_pushButton_5_clicked();
-
     void on_shouyePostButton_clicked();
 
     void on_scanStartBtn_clicked();
 
     void on_confirmBtn_clicked();
     void on_scanAgainBtn_clicked();
+    void on_idCardButton_clicked();
+    void on_zhichuButton_clicked();
+    void deal_zhichuButton_slot();
+
+    void on_chaiLvButton_clicked();
+    void deal_chaiLvButton_slot();
+    void on_chuguoButton_clicked();
+    void deal_chuguoButton_slot();
+    void on_qingkuanButton_clicked();
+    void deal_qingkuanButton_slot();
+    void on_huankuanButton_clicked();
+    void deal_huankuanButton_slot();
+    void on_neibuButton_clicked();
+    void deal_neibuButton_slot();
+    void on_lingyongButton_clicked();
+    void deal_lingyongButton_slot();
+    void on_zhanshouButton_clicked();
+    void deal_zhanshouButton_slot();
 
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
     interfaceUser *InterfaceUser;
+    voiceControl  *VoiceControl;
 };
 #endif // MAINWINDOW_H

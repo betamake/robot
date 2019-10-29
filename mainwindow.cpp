@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     ui->setupUi(this);
 //    this->setCurrentIndex(0);
     this->setCurrentIndex(5);
+    VoiceControl = new voiceControl(this);
+    VoiceControl->initMedia();
+
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +34,8 @@ void MainWindow::setCurrentIndex(int currentIndex)
 */
 void MainWindow::on_accountButton_clicked()
 {
+    VoiceControl->player->stop();
+    VoiceControl->sendPlayText("请输入账号密码");
     this->setCurrentIndex(1);
 }
 /*
@@ -46,7 +51,7 @@ void MainWindow::on_accountLoginButton_clicked()
     InterfaceUser = new interfaceUser(); //用户接口对象
     InterfaceUser->setUsername(username);
     InterfaceUser->setPassword(password);
-    InterfaceUser->run();
+    InterfaceUser->start();
     connect(InterfaceUser,SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
 }
 /*
@@ -57,6 +62,8 @@ void MainWindow::on_accountLoginButton_clicked()
 */
 void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 {
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
     QString username = realName;
 
    QString msg = getMsg;
@@ -77,6 +84,8 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 */
 void MainWindow::on_faceButton_clicked()
 {
+    VoiceControl->player->stop();
+    VoiceControl->sendPlayText("请把人脸放入框内");
     this->setCurrentIndex(2);
     qDebug()<<"人脸登录"<<CameraDevice::getinstance ()->CameraInfo.getviewfinder ();
      ui->imageLayout->addWidget(CameraDevice::getinstance ()->CameraInfo.getviewfinder ());
@@ -128,6 +137,7 @@ void MainWindow::on_RegAcountBtn_clicked()
     faceReg::getinstance ()->CameraInfo.getcamera ()->start();
     faceReg::getinstance ()->moveToThread (faceReg::getinstance ()); //解决类不在一个线程
     faceReg::getinstance ()->start ();
+    this->setCurrentIndex(4);
     connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
     connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
 }
@@ -372,55 +382,6 @@ void MainWindow::on_emitCancelBtn_clicked()
 
 }
 /**
- * @brief 支出凭证
- */
-void MainWindow::on_pushButton_2_clicked()
-{
-
-}
-/**
- * @brief 差旅报销
- */
-void MainWindow::on_pushButton_clicked()
-{
-
-}
-/**
- * @brief 出国报销
- */
-void MainWindow::on_pushButton_4_clicked()
-{
-
-}
-/**
- * @brief 请款单
- */
-void MainWindow::on_pushButton_3_clicked()
-{
-
-}
-/**
- * @brief 还款单
- */
-void MainWindow::on_pushButton_7_clicked()
-{
-
-}
-/**
- * @brief 领用单
- */
-void MainWindow::on_pushButton_6_clicked()
-{
-
-}
-/**
- * @brief 暂收单
- */
-void MainWindow::on_pushButton_5_clicked()
-{
-
-}
-/**
  * @brief 开始扫描按钮
  */
 void MainWindow::on_scanStartBtn_clicked()
@@ -481,3 +442,133 @@ void MainWindow::on_scanAgainBtn_clicked()
 {
     //to do
 }
+/*
+@brief:身份证
+@param:无
+@return:无
+@time:2019-10-19
+*/
+void MainWindow::on_idCardButton_clicked()
+{
+
+}
+
+/*
+@brief:支出附件
+@param:无
+@return:无
+@time:2019-10-19
+*/
+void MainWindow::on_zhichuButton_clicked()
+{
+    InterfaceUser->setBillType ("FY");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhichuButton_slot()));
+
+}
+/*
+@brief:支出附件槽函数
+@param:无
+@return:无
+@time:2019-10-19
+*/
+void MainWindow::deal_zhichuButton_slot ()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_chaiLvButton_clicked()
+{
+    InterfaceUser->setBillType ("CL");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_chaiLvButton_slot()));
+}
+void MainWindow::deal_chaiLvButton_slot ()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_chuguoButton_clicked()
+{
+    InterfaceUser->setBillType ("CG");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_chuguoButton_slot()));
+}
+void MainWindow::deal_chuguoButton_slot ()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_qingkuanButton_clicked()
+{
+    InterfaceUser->setBillType ("QK");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_qingkuanButton_slot()));
+
+}
+void MainWindow::deal_qingkuanButton_slot()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_huankuanButton_clicked()
+{
+    InterfaceUser->setBillType ("HK");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_huankuanButton_slot()));
+}
+void MainWindow::deal_huankuanButton_slot()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_neibuButton_clicked()
+{
+    InterfaceUser->setBillType ("ZZ");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_neibuButton_slot()));
+}
+void MainWindow::deal_neibuButton_slot()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_lingyongButton_clicked()
+{
+    InterfaceUser->setBillType ("LY");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_lingyongButton_slot()));
+}
+void MainWindow::deal_lingyongButton_slot()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+void MainWindow::on_zhanshouButton_clicked()
+{
+    InterfaceUser->setBillType ("ZS");
+    InterfaceUser->start ();
+    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhanshouButton_slot()));
+}
+void MainWindow::deal_zhanshouButton_slot()
+{
+    InterfaceUser->quit ();
+    InterfaceUser->wait ();
+    //接入数据
+}
+
+

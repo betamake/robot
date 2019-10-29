@@ -6,6 +6,7 @@ interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
     managerJar = new QNetworkCookieJar(this);
     mainMangerNetwork = new QNetworkAccessManager(this);
     ipAddress = "http://211.157.179.73:9580";
+    connect(this,SIGNAL(UserLoginDone(QString,QString)),this,SLOT(getBillList()));
 }
 /*
 @brief:用户登录线程入口
@@ -76,5 +77,67 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
            }
         }
         emit UserLoginDone (this->getRealName(),this->getLoginMsg());
+    }
+}
+/*
+@brief:获取报销单单据号列表
+@param:无
+@return:无
+@time:2019-10-17
+*/
+void interfaceUser::getBillList()
+{
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
+    QUrlQuery params;
+    params.addQueryItem("billType",this->getBillType());
+    QString  data = params.toString();
+    QNetworkRequest request = HttpRequest.getHttpRequestRemote
+            (ipAddress.left(26).append("/reim/robot/billList?").append (data.toUtf8()));
+    request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
+    mainMangerNetwork->setCookieJar (managerJar);
+    QNetworkReply *reply = mainMangerNetwork->get (request);
+
+}
+/*
+@brief:处理报销单据号接口函数
+@param:无
+@return:无
+@time:2019-10-17
+*/
+void interfaceUser::dealGetBillList(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray all = reply->readAll();
+        QJsonParseError jsonError;
+        QJsonObject dataObject;
+        QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);
+        qDebug()<< QString(doucment.toJson()).replace("\n","").replace("\"","").replace(" ","")<<endl;
+        if((!doucment.isEmpty()) && jsonError.error == QJsonParseError::NoError)
+        {
+            QJsonObject object = doucment.object();
+            QJsonValue dataVal = object.take("msg");
+            QString msg = dataVal.toString ();
+            if (msg=="操作成功")
+            {
+                QJsonValue dataVal  = object.value ("data");
+                QJsonArray dataArray = dataVal.toArray ();
+                for (int i =0;i<dataArray.size ();i++)
+                {
+                    QJsonValue billListVal = dataArray.at (i);
+                    QJsonObject billListValObject = billListVal.toObject ();
+                    QString code = billListValObject.value("code").toString();
+                    QString billDate = billListValObject.value("billDate").toString();
+                    QString moneyReim = billListValObject.value("moneyReim").toString();
+                    QString use = billListValObject.value("use").toString();
+                    this->setBillUse(use);
+                    this->setBillCode(code);
+                    this->setBillDate(billDate);
+                    this->setBillMoney(moneyReim);
+                    emit sentDealBillListDone ();
+                }
+            }
+
+        }
     }
 }

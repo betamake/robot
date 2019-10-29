@@ -26,7 +26,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     windows/billitem.cpp \
-    windows/scheduleitem.cpp
+    windows/scheduleitem.cpp\
+    qaudiolevel.cpp \
+    voicecontrol.cpp
 
 HEADERS += \
     cameradevice.h \
@@ -35,7 +37,10 @@ HEADERS += \
     interfaceuser.h \
     mainwindow.h \
     windows/billitem.h \
-    windows/scheduleitem.h
+    windows/scheduleitem.h\
+    qaudiolevel.h \
+    voicecontrol.h
+
 
 FORMS += \
     mainwindow.ui \
