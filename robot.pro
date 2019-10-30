@@ -25,6 +25,7 @@ SOURCES += \
     interfaceuser.cpp \
     main.cpp \
     mainwindow.cpp \
+    qrdecode.cpp \
     windows/billitem.cpp \
     windows/scheduleitem.cpp\
     qaudiolevel.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     httprequest.h \
     interfaceuser.h \
     mainwindow.h \
+    qrdecode.h \
     windows/billitem.h \
     windows/scheduleitem.h\
     qaudiolevel.h \
