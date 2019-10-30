@@ -130,8 +130,6 @@ void CameraDevice::faceCheck ()
         {
             qDebug() << "face check failed, stop send photos"<< endl;
             sentIndex=6;
-
-//            QMessageBox::information(this, QString::fromUtf8("失败"),QString::fromUtf8("人脸不存在，请补录人脸信息"));
             if(timer->isActive ())
             {
                 timer->stop ();

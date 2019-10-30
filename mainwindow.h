@@ -8,6 +8,7 @@
 #include "windows/billitem.h"
 #include "windows/scheduleitem.h"
 #include "voicecontrol.h"
+#include "qrdecode.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -79,6 +80,8 @@ private slots:
     void deal_lingyongButton_slot();
     void on_zhanshouButton_clicked();
     void deal_zhanshouButton_slot();
+
+    void on_postBillButton_clicked();
 
 private:
     Ui::MainWindow *ui;

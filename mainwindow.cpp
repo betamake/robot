@@ -95,7 +95,7 @@ void MainWindow::on_faceButton_clicked()
      CameraDevice::getinstance ()->start ();
      // jump to facecheck page
      this->setCurrentIndex(2);
-      connect (CameraDevice::getinstance (),SIGNAL(faceCheckDone()),this,SLOT(dealFaceCheckDone()));
+     connect (CameraDevice::getinstance (),SIGNAL(faceCheckDone()),this,SLOT(dealFaceCheckDone()));
      connect (CameraDevice::getinstance (),SIGNAL(faceCheckFailure()),this,SLOT(dealFaceCheckFailure()));
 }
 /*
@@ -573,3 +573,17 @@ void MainWindow::deal_zhanshouButton_slot()
 }
 
 
+
+void MainWindow::on_postBillButton_clicked()
+{
+    this->setCurrentIndex(10);
+    ui->qrHBoxLayout->addWidget(QrDecode::getinstance()->QrInfo.getviewfinder());
+    QrDecode::getinstance ()->QrInfo.getcamera ()->start();
+    QrDecode::getinstance ()->moveToThread (QrDecode::getinstance ()); //解决类不在一个线程
+    QrDecode::getinstance ()->start ();
+//    this->setCurrentIndex(4);
+//    connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
+//    connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
+
+
+}
