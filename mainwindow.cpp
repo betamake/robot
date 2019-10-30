@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     this->setCurrentIndex(5);
     VoiceControl = new voiceControl(this);
     VoiceControl->initMedia();
-
 }
 
 MainWindow::~MainWindow()
@@ -585,5 +584,10 @@ void MainWindow::on_postBillButton_clicked()
 //    connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
 //    connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
 
+
+}
+
+void MainWindow::on_ceShiButton_clicked()
+{
 
 }

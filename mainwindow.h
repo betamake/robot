@@ -83,6 +83,8 @@ private slots:
 
     void on_postBillButton_clicked();
 
+    void on_ceShiButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号

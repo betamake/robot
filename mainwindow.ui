@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>10</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="huanYingYe">
      <layout class="QGridLayout" name="gridLayout">
@@ -1543,6 +1543,19 @@
       </property>
       <property name="text">
        <string>重新扫描</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ceShiButton">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>160</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>测试识别</string>
       </property>
      </widget>
     </widget>
