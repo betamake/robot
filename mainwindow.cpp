@@ -4,8 +4,7 @@
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-//    this->setCurrentIndex(0);
-    this->setCurrentIndex(5);
+    this->setCurrentIndex(0);
     VoiceControl = new voiceControl(this);
     VoiceControl->initMedia();
 }
@@ -70,6 +69,8 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
    if(msg == "登录成功")
    {
        this->setCurrentIndex(5);
+       qDebug()<<"当前用户："<<realName;
+       ui->userInfoLabel->setText(realName);
 
    }
    else {
@@ -589,5 +590,24 @@ void MainWindow::on_postBillButton_clicked()
 
 void MainWindow::on_ceShiButton_clicked()
 {
+    billIndentify = new BillIdentify;
+    billIndentify->moveToThread(billIndentify);
+    billIndentify->start();
+    connect(billIndentify,SIGNAL(success()),this,SLOT(deal_ceShiButton_clicked()));
+}
+void MainWindow::deal_ceShiButton_clicked()
+{
+    billIndentify->quit();
+    billIndentify->wait();
+}
 
+void MainWindow::on_chatButton_clicked()
+{
+
+        qmlRegisterType<Turing>("io.qt.turing", 1, 0, "Turning");
+
+        QQuickView *view = new QQuickView();
+        QWidget *widget = QWidget::createWindowContainer(view, this);
+        //    connect(turing,&Turing::received,this,&MainWindow::turingSpeak);//turing speak
+        view->setSource(QUrl("qrc:/main.qml"));
 }

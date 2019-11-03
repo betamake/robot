@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ConversationPage.qml</file>
+        <file>main.qml</file>
+        <file>me.png</file>
+        <file>robot.png</file>
+    </qresource>
+</RCC>

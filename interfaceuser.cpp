@@ -67,7 +67,7 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                                 dataObject = dataVal.toObject ();
                                 if(dataObject.contains ("name")){
                                     QJsonValue nameVal = dataObject.take ("name");
-                                    name = nameVal.toString ();
+                                    name = nameVal.toString ();                                  
                                     this->setRealName(name);
                                 }
 //                                emit UserLoginDone (this->getRealName(),this->getLoginMsg());

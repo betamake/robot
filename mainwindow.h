@@ -9,6 +9,9 @@
 #include "windows/scheduleitem.h"
 #include "voicecontrol.h"
 #include "qrdecode.h"
+#include "billidentify.h"
+#include <QQuickView>
+#include "turing.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -84,11 +87,15 @@ private slots:
     void on_postBillButton_clicked();
 
     void on_ceShiButton_clicked();
+    void deal_ceShiButton_clicked();
+    void on_chatButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
     interfaceUser *InterfaceUser;
     voiceControl  *VoiceControl;
+    BillIdentify *billIndentify;
+    Turing *turing;
 };
 #endif // MAINWINDOW_H
