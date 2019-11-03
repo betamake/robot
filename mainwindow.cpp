@@ -34,6 +34,7 @@ void MainWindow::on_accountButton_clicked()
 {
     VoiceControl->player->stop();
     VoiceControl->sendPlayText("请输入账号密码");
+    ui->RegPwd_LineEdit->setEchoMode(QLineEdit::Password);
     this->setCurrentIndex(1);
 }
 /*
@@ -52,6 +53,8 @@ void MainWindow::on_accountLoginButton_clicked()
     InterfaceUser->moveToThread(InterfaceUser);
     InterfaceUser->start();
     connect(InterfaceUser,SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
+    ui->accountUserEdit->clear();
+    ui->accountPasswordEdit->clear();
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转。
@@ -141,6 +144,8 @@ void MainWindow::on_RegAcountBtn_clicked()
     this->setCurrentIndex(4);
     connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
     connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
+    ui->RegUsername_LineEdit->clear();
+    ui->RegPwd_LineEdit->clear();
 }
 /*
 @brief:注册成功返回首页
@@ -178,10 +183,34 @@ void MainWindow::dealFaceRegFailure ()
 void MainWindow::on_firstButton_clicked()
 {
     this->setCurrentIndex(0);
-//    switch (currentIndex) {
-//    case 1:
-
-//    }
+    switch (currentIndex) {
+    case 1:
+        ui->accountUserEdit->clear();
+        ui->accountPasswordEdit->clear();
+        break;
+    case 2:
+        CameraDevice::getinstance ()->quit ();
+        CameraDevice::getinstance ()->wait ();
+        break;
+    case 3:
+        ui->RegUsername_LineEdit->clear();
+        ui->RegPwd_LineEdit->clear();
+        break;
+    case 4:
+        this->dealFaceRegSucess();
+        break;
+    case 10:
+        QrDecode::getinstance ()->quit();
+        QrDecode::getinstance ()->wait();
+        break;
+    case 9:
+        billIndentify->quit();
+        billIndentify->wait();
+        break;
+    default:
+        break;
+//后续的报销写完之后继续完成清空
+    }
 }
 /**
  * @brief 首页-提交票据按钮

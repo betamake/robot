@@ -59,19 +59,15 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                     this->setLoginMsg(msg);
                     if (msg =="登录成功")
                     {
-                        if(object.contains("data"))
-                        {
                             QJsonValue dataVal = object.value ("data");
-                            if(dataVal.isObject ())
-                            {
-                                dataObject = dataVal.toObject ();
-                                if(dataObject.contains ("name")){
-                                    QJsonValue nameVal = dataObject.take ("name");
-                                    name = nameVal.toString ();                                  
-                                    this->setRealName(name);
-                                }
-//                                emit UserLoginDone (this->getRealName(),this->getLoginMsg());
-                            }
+                            dataObject = dataVal.toObject ();
+                            QJsonValue userVal = dataObject.value("user");
+                            QJsonObject userObject = userVal.toObject();
+                            if(userObject.contains ("name")){
+                            QJsonValue nameVal = userObject.take ("name");
+                            name = nameVal.toString ();
+                            this->setRealName(name);
+
                         }
 
                     }

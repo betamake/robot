@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="huanYingYe">
      <layout class="QGridLayout" name="gridLayout">
@@ -364,7 +364,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="accountPasswordEdit"/>
+         <widget class="QLineEdit" name="accountPasswordEdit">
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -509,7 +513,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="RegPwd_LineEdit"/>
+        <widget class="QLineEdit" name="RegPwd_LineEdit">
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
