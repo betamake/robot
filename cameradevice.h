@@ -26,6 +26,7 @@
 #include <QFile>
 #include <QObject>
 #include <QList>
+#include "interfaceuser.h"
 //#include <allinterface.h>
 #include<QCoreApplication>
 #include <QDebug>
@@ -102,6 +103,7 @@ private:
     bool isFaceOk;
     QString address;
     httpRequest HttpRequest;
+    interfaceUser *InterfaceUser;
 };
 
 #endif // CAMERADEVICE_H
