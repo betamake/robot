@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     cameradevice.cpp \
+    documentjson.cpp \
     facereg.cpp \
     httprequest.cpp \
     interfaceuser.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
 
 HEADERS += \
     cameradevice.h \
+    documentjson.h \
     facereg.h \
     httprequest.h \
     interfaceuser.h \

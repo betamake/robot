@@ -24,13 +24,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void setCurrentIndex(int currentIndex); //实现页面跳转;
-
-    void getAllBills();             //获得票据列表
-
     void getDocumentsListWidget(int index);   //附件列表页实现
 
 private slots:
     void startBillEmit();  //点击选择票据列表中的“提交票据”按钮，转入报销页面
+
+    void getAllBills();             //获得票据列表
 
     void startEmit(int type, int index);    //获得要提交的票据的信息，用于和扫描的结果对比
 

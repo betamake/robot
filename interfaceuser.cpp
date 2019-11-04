@@ -3,6 +3,7 @@
 #include <QDebug>
 interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
 {
+    list.clear();
     ipAddress = "http://211.157.179.73:9580";
     connect(this,SIGNAL(UserLoginDone(QString,QString)),this,SLOT(getBillList()));
 }
@@ -108,6 +109,7 @@ void interfaceUser::getBillList()
 */
 void interfaceUser::dealGetBillList(QNetworkReply *reply)
 {
+    qDebug() << "-----------------------getBillList";
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();
@@ -132,12 +134,22 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     QString billDate = billListValObject.value("billDate").toString();
                     QString moneyReim = billListValObject.value("moneyReim").toString();
                     QString use = billListValObject.value("use").toString();
-                    this->setBillUse(use);
-                    this->setBillCode(code);
-                    this->setBillDate(billDate);
-                    this->setBillMoney(moneyReim);
-                    emit sentDealBillListDone ();
+//                    this->setBillUse(use);
+//                    this->setBillCode(code);
+//                    this->setBillDate(billDate);
+//                    this->setBillMoney(moneyReim);
+//                    emit sentDealBillListDone ();
+
+                    billInfo info;
+                    info.billUse = use;
+                    info.billCode = code;
+                    info.billDate = billDate;
+                    info.billMoney = moneyReim;
+                    insertBillInfo(info);
+
+                    qDebug() << "Add a billinfo numbered as " << info.billCode;
                 }
+                emit sentDealBillListDone ();
             }
 
         }

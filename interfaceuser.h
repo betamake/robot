@@ -16,6 +16,15 @@
 @brief:后端接口类
 @time:2019-10-17
 */
+typedef struct{
+    QString billCode;
+    QString billDate;
+    QString billMoney;
+    QString billUse;
+} billInfo;
+
+typedef QList<billInfo> billInfoList;
+
 class interfaceUser : public QThread
 {
     Q_OBJECT
@@ -80,6 +89,21 @@ public:
     void setBillUse(const QString billUse){
         this->billUse = billUse;
     }
+
+    void insertBillInfo(billInfo& bill){
+        QList<billInfo>::iterator i;
+        for(i=list.begin(); i!=list.end(); i++){
+            if (i->billCode == bill.billCode)
+                break;
+        }
+        if (i==list.end())
+            list.insert(i, bill);
+    }
+
+    QList<billInfo> getList(){
+        return list;
+    }
+
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
     void sentDealBillListDone();
@@ -106,6 +130,8 @@ private:
     QString billDate;
     QString billMoney;
     QString billUse;
+
+    billInfoList list;
 };
 
 #endif // INTERFACEUSER_H
