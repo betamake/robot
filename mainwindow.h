@@ -93,7 +93,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
-    interfaceUser *InterfaceUser;
     voiceControl  *VoiceControl;
     BillIdentify *billIndentify;
     Turing *turing;

@@ -1,10 +1,21 @@
 #include "interfaceuser.h"
 #include <QObject>
 #include <QDebug>
-interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
+interfaceUser *interfaceUser::instance =NULL;
+interfaceUser::interfaceUser(QObject *parent) : QObject(parent)
 {
     ipAddress = "http://211.157.179.73:9580";
-    connect(this,SIGNAL(UserLoginDone(QString,QString)),this,SLOT(getBillList()));
+}
+interfaceUser::~interfaceUser(){
+    delete instance;
+    instance = NULL;
+}
+interfaceUser *interfaceUser::getinstance ()
+{
+    if (NULL == instance) {
+        instance = new interfaceUser();
+    }
+    return instance;
 }
 /*
 @brief:用户登录线程入口
@@ -12,7 +23,7 @@ interfaceUser::interfaceUser(QObject *parent) : QThread(parent)
 @return:无
 @time:2019-10-17
 */
-void interfaceUser::run()
+void interfaceUser::userLogin()
 {
     managerJar = new QNetworkCookieJar();
     mainMangerNetwork = new QNetworkAccessManager();
@@ -26,7 +37,6 @@ void interfaceUser::run()
     QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/10gin"));
     QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
     mainMangerNetwork->setCookieJar (managerJar);
-    exec();
 
 }
 /*

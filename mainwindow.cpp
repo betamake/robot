@@ -47,12 +47,10 @@ void MainWindow::on_accountLoginButton_clicked()
 {
     QString username = ui->accountUserEdit->text();
     QString password = ui->accountPasswordEdit->text();
-    InterfaceUser = new interfaceUser(); //用户接口对象
-    InterfaceUser->setUsername(username);
-    InterfaceUser->setPassword(password);
-    InterfaceUser->moveToThread(InterfaceUser);
-    InterfaceUser->start();
-    connect(InterfaceUser,SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
+    interfaceUser::getinstance()->setUsername(username);
+    interfaceUser::getinstance()->setPassword(password);
+    interfaceUser::getinstance()->userLogin();
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
 }
@@ -64,8 +62,6 @@ void MainWindow::on_accountLoginButton_clicked()
 */
 void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     QString username = realName;
 
    QString msg = getMsg;
@@ -135,8 +131,8 @@ void MainWindow::dealFaceCheckFailure ()
 */
 void MainWindow::on_RegAcountBtn_clicked()
 {
-    InterfaceUser->setUsername (ui->RegUsername_LineEdit->text());
-    InterfaceUser->setPassword (ui->RegPwd_LineEdit->text());
+    interfaceUser::getinstance()->setUsername (ui->RegUsername_LineEdit->text());
+    interfaceUser::getinstance()->setPassword (ui->RegPwd_LineEdit->text());
     ui->faceRegImageLayout->addWidget(faceReg::getinstance ()->CameraInfo.getviewfinder ());
     faceReg::getinstance ()->CameraInfo.getcamera ()->start();
     faceReg::getinstance ()->moveToThread (faceReg::getinstance ()); //解决类不在一个线程
@@ -491,9 +487,9 @@ void MainWindow::on_idCardButton_clicked()
 */
 void MainWindow::on_zhichuButton_clicked()
 {
-    InterfaceUser->setBillType ("FY");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhichuButton_slot()));
+    interfaceUser::getinstance()->setBillType ("FY");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhichuButton_slot()));
 
 }
 /*
@@ -504,100 +500,84 @@ void MainWindow::on_zhichuButton_clicked()
 */
 void MainWindow::deal_zhichuButton_slot ()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_chaiLvButton_clicked()
 {
-    InterfaceUser->setBillType ("CL");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_chaiLvButton_slot()));
+    interfaceUser::getinstance()->setBillType ("CL");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_chaiLvButton_slot()));
 }
 void MainWindow::deal_chaiLvButton_slot ()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_chuguoButton_clicked()
 {
-    InterfaceUser->setBillType ("CG");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_chuguoButton_slot()));
+    interfaceUser::getinstance()->setBillType ("CG");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_chuguoButton_slot()));
 }
 void MainWindow::deal_chuguoButton_slot ()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_qingkuanButton_clicked()
 {
-    InterfaceUser->setBillType ("QK");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_qingkuanButton_slot()));
+    interfaceUser::getinstance()->setBillType ("QK");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_qingkuanButton_slot()));
 
 }
 void MainWindow::deal_qingkuanButton_slot()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_huankuanButton_clicked()
 {
-    InterfaceUser->setBillType ("HK");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_huankuanButton_slot()));
+    interfaceUser::getinstance()->setBillType ("HK");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_huankuanButton_slot()));
 }
 void MainWindow::deal_huankuanButton_slot()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_neibuButton_clicked()
 {
-    InterfaceUser->setBillType ("ZZ");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_neibuButton_slot()));
+    interfaceUser::getinstance()->setBillType ("ZZ");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_neibuButton_slot()));
 }
 void MainWindow::deal_neibuButton_slot()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_lingyongButton_clicked()
 {
-    InterfaceUser->setBillType ("LY");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_lingyongButton_slot()));
+    interfaceUser::getinstance()->setBillType ("LY");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_lingyongButton_slot()));
 }
 void MainWindow::deal_lingyongButton_slot()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 
 void MainWindow::on_zhanshouButton_clicked()
 {
-    InterfaceUser->setBillType ("ZS");
-    InterfaceUser->start ();
-    connect(InterfaceUser,SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhanshouButton_slot()));
+    interfaceUser::getinstance()->setBillType ("ZS");
+    interfaceUser::getinstance()->getBillList();
+    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhanshouButton_slot()));
 }
 void MainWindow::deal_zhanshouButton_slot()
 {
-    InterfaceUser->quit ();
-    InterfaceUser->wait ();
     //接入数据
 }
 

@@ -16,12 +16,13 @@
 @brief:后端接口类
 @time:2019-10-17
 */
-class interfaceUser : public QThread
+class interfaceUser : public QObject
 {
     Q_OBJECT
 public:
     explicit interfaceUser(QObject *parent = nullptr);
-    void run() ;
+    ~interfaceUser();
+    void userLogin();
     //用户名密码
     QString getUsername(){
         return this->username;
@@ -80,6 +81,7 @@ public:
     void setBillUse(const QString billUse){
         this->billUse = billUse;
     }
+    static interfaceUser *getinstance();
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
     void sentDealBillListDone();
@@ -89,6 +91,7 @@ public slots:
         void dealGetBillList(QNetworkReply *reply);
 
 private:
+     static interfaceUser *instance;
     //用户名密码
     QString username;
     QString password;
