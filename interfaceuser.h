@@ -16,6 +16,8 @@
 @brief:后端接口类
 @time:2019-10-17
 */
+
+//票据和票据列表结构
 typedef struct{
     QString billCode;
     QString billDate;
@@ -25,12 +27,23 @@ typedef struct{
 
 typedef QList<billInfo> billInfoList;
 
-class interfaceUser : public QThread
+//附件和附件列表结构
+typedef struct{
+    QString attachmentId;
+    QString attachmentName;
+    QString attachmentPath;
+    QString attachmentType;
+} attachment;
+
+typedef QList<attachment> attachmentList;
+
+class interfaceUser : public QObject
 {
     Q_OBJECT
 public:
     explicit interfaceUser(QObject *parent = nullptr);
-    void run() ;
+    ~interfaceUser();
+    void userLogin();
     //用户名密码
     QString getUsername(){
         return this->username;
@@ -104,6 +117,8 @@ public:
         return list;
     }
 
+    static interfaceUser *getinstance();
+
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
     void sentDealBillListDone();
@@ -113,6 +128,7 @@ public slots:
         void dealGetBillList(QNetworkReply *reply);
 
 private:
+     static interfaceUser *instance;
     //用户名密码
     QString username;
     QString password;

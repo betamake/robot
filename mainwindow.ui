@@ -364,7 +364,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="accountPasswordEdit"/>
+         <widget class="QLineEdit" name="accountPasswordEdit">
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -509,7 +513,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="RegPwd_LineEdit"/>
+        <widget class="QLineEdit" name="RegPwd_LineEdit">
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -778,6 +786,19 @@
         <string>操作</string>
        </property>
       </column>
+     </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>110</y>
+        <width>71</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>clear</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="fuJianItemView">
@@ -1597,6 +1618,19 @@
     </property>
     <property name="text">
      <string>当前用户：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="userInfoLabel">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>15</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
