@@ -142,7 +142,8 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     QJsonObject billListValObject = billListVal.toObject ();
                     QString code = billListValObject.value("code").toString();
                     QString billDate = billListValObject.value("billDate").toString();
-                    QString moneyReim = billListValObject.value("moneyReim").toString();
+                    int number = billListValObject.value("moneyReim").toInt();
+                    QString moneyReim = QString::number(number);
                     QString use = billListValObject.value("use").toString();
 
                     billInfo info;
