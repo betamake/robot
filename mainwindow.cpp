@@ -239,6 +239,7 @@ void MainWindow::on_shouyePostButton_clicked()
         //跳转到扫描报销单页面
         on_postBillButton_clicked();
     }
+    this->on_zhichuButton_clicked();
 }
 /**
  * @brief 获得票据列表
@@ -500,6 +501,7 @@ void MainWindow::setBillInfo()
  */
 void MainWindow::on_confirmBtn_clicked()
 {
+    this->setCurrentIndex(7);
     //to do
     //从全局的发票结构体中获得需要显示的字段并显示在相应的edit中
 

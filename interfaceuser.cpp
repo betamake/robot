@@ -6,6 +6,7 @@ interfaceUser::interfaceUser(QObject *parent) : QObject(parent)
 {
     list.clear();
     ipAddress = "http://211.157.179.73:9580";
+//    211.157.179.73:9580/admin/review/view?path=2019/11/04/3f104f448329b00a.txt
 }
 interfaceUser::~interfaceUser(){
     delete instance;
@@ -159,4 +160,68 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
     }
 
     disconnect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
+}
+/*
+@brief:获取报销单单据号列表
+@param:无
+@return:无
+@time:2019-10-17
+*/
+void interfaceUser::getbillAttachment()
+{
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
+    QUrlQuery params;
+    params.addQueryItem("billCode",this->getBillCode());
+    QString  data = params.toString();
+    QNetworkRequest request = HttpRequest.getHttpRequestRemote
+            (ipAddress.left(26).append("/reim/robot/billAttachment?").append (data.toUtf8()));
+    request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
+    mainMangerNetwork->setCookieJar (managerJar);
+    QNetworkReply *reply = mainMangerNetwork->get (request);
+
+}
+void interfaceUser::dealbillAttachment(QNetworkReply *reply)
+{
+    qDebug() << "-----------------------getBillList";
+    list.clear();
+
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray all = reply->readAll();
+        QJsonParseError jsonError;
+        QJsonObject dataObject;
+        QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);
+        qDebug()<< QString(doucment.toJson()).replace("\n","").replace("\"","").replace(" ","")<<endl;
+        if((!doucment.isEmpty()) && jsonError.error == QJsonParseError::NoError)
+        {
+            QJsonObject object = doucment.object();
+            QJsonValue dataVal = object.take("msg");
+            QString msg = dataVal.toString ();
+            if (msg=="操作成功")
+            {
+                QJsonValue dataVal  = object.value ("data");
+                QJsonArray dataArray = dataVal.toArray ();
+                qDebug() << "count = " << dataArray.size();
+                this->setBillNum(dataArray.size ());//记录票据的数量
+                for (int i =0;i<dataArray.size ();i++)
+                {
+                    QJsonValue billListVal = dataArray.at (i);
+                    QJsonObject billListValObject = billListVal.toObject ();
+                    QString attachmentId = billListValObject.value("invoiceNum").toString();
+                    QString attachmentName = billListValObject.value("billDate").toString();
+                    QString attachmentPath =billListValObject.value("path").toString() ;
+                    QString attachmentType = billListValObject.value("type").toString();
+                    QString invoiceType = billListValObject.value("invoiceType").toString();
+
+                    attachment info;
+                    info.attachmentId = attachmentId;
+                    info.attachmentName = attachmentName;
+                    info.attachmentPath = attachmentPath;
+                    info.attachmentType = attachmentType;
+                    info.invoiceType = invoiceType;
+                    insertAttachmentInfo(info);
+                }
+            }
+        }
+    }
 }
