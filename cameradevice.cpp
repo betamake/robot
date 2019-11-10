@@ -4,6 +4,7 @@ CameraDevice::CameraDevice(QObject *parent) : QThread(parent)
 {
        address = "http://192.168.3.185:8000";
        this->initCamera ();
+       InterfaceUser = new interfaceUser;
 
 }
 CameraDevice::~CameraDevice(){
@@ -241,6 +242,8 @@ void CameraDevice::faceReply (QNetworkReply *reply)
                         //相似度分数大于80,识别成功
                         qDebug() << "user_info:" << user_info;
                         qDebug() << "uid:" << uid;
+                        InterfaceUser->setUsername(user_info);
+                        InterfaceUser->setPassword(uid);
 //                        uname = user_info;
                         isFaceOk = true;
                         CameraInfo.getcamera ()->stop();

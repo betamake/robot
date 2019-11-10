@@ -97,7 +97,7 @@ private:
     voiceControl  *VoiceControl;
     BillIdentify *billIndentify;
     Turing *turing;
-
+    QString loginType;
     QList<billInfo> mBillList;
 
 };

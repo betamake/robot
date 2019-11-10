@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     this->setCurrentIndex(0);
     VoiceControl = new voiceControl(this);
     VoiceControl->initMedia();
+    ui->userLabel->hide();
 }
 
 MainWindow::~MainWindow()
@@ -53,6 +54,7 @@ void MainWindow::on_accountLoginButton_clicked()
     connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
+    ui->userLabel->show();
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转。
@@ -72,7 +74,13 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
        ui->userInfoLabel->setText(realName);
    }
    else {
-       QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
+       if (loginType =="face"){
+           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
+           this->setCurrentIndex(3);
+       }
+       else {
+           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
+       }
    }
 }
 /*
@@ -106,7 +114,12 @@ void MainWindow::dealFaceCheckDone ()
 {
     CameraDevice::getinstance ()->quit ();
     CameraDevice::getinstance ()->wait ();
-    this->setCurrentIndex(5);
+    interfaceUser::getinstance()->userLogin();
+    loginType ="face";
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
+    ui->accountUserEdit->clear();
+    ui->accountPasswordEdit->clear();
+    ui->userLabel->show();
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转到材料提交页。
@@ -177,6 +190,8 @@ void MainWindow::dealFaceRegFailure ()
 */
 void MainWindow::on_firstButton_clicked()
 {
+    ui->userLabel->hide();
+    ui->userInfoLabel->clear();
     this->setCurrentIndex(0);
     switch (currentIndex) {
     case 1:
