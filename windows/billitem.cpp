@@ -19,6 +19,21 @@ void billItem::setIndex(int index)
     iIndex = index;
 }
 
+void billItem::setType(QString type)
+{
+    if(type == "0"){
+        ui->radioButton_2->clicked(true);
+    }
+    else
+        ui->radioButton->clicked(true);
+}
+
+void billItem::setCode(QString strCode)
+{
+    billCode = strCode;
+    ui->billNumber->setText(billCode);
+}
+
 /**
  * @brief 发票提交按钮
  * @param 无

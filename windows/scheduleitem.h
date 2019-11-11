@@ -20,6 +20,10 @@ public:
 
     void setTypeAndIndex(int type, int index);
 
+    void setCode(QString strCode);
+
+    void setName(QString name);
+
 signals:
     void startSchedule(int type, int index);
 
@@ -31,6 +35,8 @@ private:
 
     int iType;      //类型，1为日程，2为其他
     int iIndex;     //在对应列表中的序号
+
+    QString mCode;
 };
 
 #endif // SCHEDULEITEM_H

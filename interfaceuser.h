@@ -33,6 +33,7 @@ typedef struct{
     QString attachmentName;
     QString attachmentPath;
     QString attachmentType;
+    QString invoiceType;
 } attachment;
 
 typedef QList<attachment> attachmentList;
@@ -102,7 +103,14 @@ public:
     void setBillUse(const QString billUse){
         this->billUse = billUse;
     }
-
+    int getBillNum()
+    {
+        return this->billNum;
+    }
+    void setBillNum(const int billNum)
+    {
+        this->billNum = billNum;
+    }
     void insertBillInfo(billInfo& bill){
         QList<billInfo>::iterator i;
         for(i=list.begin(); i!=list.end(); i++){
@@ -116,16 +124,33 @@ public:
     QList<billInfo> getList(){
         return list;
     }
+    void insertAttachmentInfo(attachment& info){
+        QList<attachment>::iterator i;
+        for(i=aList.begin(); i!=aList.end(); i++){
+            if (i->attachmentId == info.attachmentId)
+                break;
+        }
+        if (i==aList.end())
+            aList.insert(i, info);
+    }
+
+    QList<attachment> getAttachment(){
+        return aList;
+    }
 
     static interfaceUser *getinstance();
+    void getBillList();
+    void getbillAttachment();
 
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
     void sentDealBillListDone();
+    void sentDealAttachmentDone();
+
 public slots:
         void userLoginInterfaceReply(QNetworkReply *reply);
-        void getBillList();
         void dealGetBillList(QNetworkReply *reply);
+        void dealbillAttachment(QNetworkReply *reply);
 
 private:
      static interfaceUser *instance;
@@ -146,8 +171,10 @@ private:
     QString billDate;
     QString billMoney;
     QString billUse;
+    int billNum;
 
     billInfoList list;
+    attachmentList aList;
 };
 
 #endif // INTERFACEUSER_H

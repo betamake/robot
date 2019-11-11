@@ -33,6 +33,7 @@ private slots:
     void startBillEmit();  //点击选择票据列表中的“提交票据”按钮，转入报销页面
 
     void getAllBills();             //获得票据列表
+    void getAttachments();          //获得单据列表
 
     void startEmit(int type, int index);    //获得要提交的票据的信息，用于和扫描的结果对比
 
@@ -66,22 +67,14 @@ private slots:
     void on_scanAgainBtn_clicked();
     void on_idCardButton_clicked();
     void on_zhichuButton_clicked();
-    void deal_zhichuButton_slot();
 
     void on_chaiLvButton_clicked();
-    void deal_chaiLvButton_slot();
     void on_chuguoButton_clicked();
-    void deal_chuguoButton_slot();
     void on_qingkuanButton_clicked();
-    void deal_qingkuanButton_slot();
     void on_huankuanButton_clicked();
-    void deal_huankuanButton_slot();
     void on_neibuButton_clicked();
-    void deal_neibuButton_slot();
     void on_lingyongButton_clicked();
-    void deal_lingyongButton_slot();
     void on_zhanshouButton_clicked();
-    void deal_zhanshouButton_slot();
 
     void on_postBillButton_clicked();
 
@@ -98,7 +91,9 @@ private:
     BillIdentify *billIndentify;
     Turing *turing;
     QString loginType;
-    QList<billInfo> mBillList;
 
+
+    QList<billInfo> mBillList;
+    QList<attachment> mAttachmentList;
 };
 #endif // MAINWINDOW_H
