@@ -169,7 +169,7 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
 */
 void interfaceUser::getbillAttachment()
 {
-    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealbillAttachment(QNetworkReply *)));
     QUrlQuery params;
     params.addQueryItem("billCode",this->getBillCode());
     QString  data = params.toString();
@@ -182,8 +182,8 @@ void interfaceUser::getbillAttachment()
 }
 void interfaceUser::dealbillAttachment(QNetworkReply *reply)
 {
-    qDebug() << "-----------------------getBillList";
-    list.clear();
+    qDebug() << "-----------------------getBillList\n" << reply->error();
+    aList.clear();
 
     if(reply->error() == QNetworkReply::NoError)
     {
@@ -208,10 +208,10 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                     QJsonValue billListVal = dataArray.at (i);
                     QJsonObject billListValObject = billListVal.toObject ();
                     QString attachmentId = billListValObject.value("invoiceNum").toString();
-                    QString attachmentName = billListValObject.value("billDate").toString();
+                    QString attachmentName = billListValObject.value("name").toString();
                     QString attachmentPath =billListValObject.value("path").toString() ;
-                    QString attachmentType = billListValObject.value("type").toString();
-                    QString invoiceType = billListValObject.value("invoiceType").toString();
+                    QString attachmentType = billListValObject.value("type").toString();        //发票、其他
+                    QString invoiceType = billListValObject.value("invoiceType").toString();    //0纸质发票，1电子发票
 
                     attachment info;
                     info.attachmentId = attachmentId;
@@ -221,6 +221,7 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                     info.invoiceType = invoiceType;
                     insertAttachmentInfo(info);
                 }
+                emit sentDealAttachmentDone();
             }
         }
     }

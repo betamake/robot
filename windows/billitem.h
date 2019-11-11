@@ -21,6 +21,10 @@ public:
 
     void setIndex(int index);
 
+    void setType(QString type);
+
+    void setCode(QString strCode);
+
 signals:
     void startBill(int type, int index);
 
@@ -31,6 +35,10 @@ private:
     Ui::billItem *ui;
 
     int iIndex;
+
+    QString type;       //0为纸质发票，1为电子发票
+
+    QString billCode;
 };
 
 #endif // BILLITEM_H

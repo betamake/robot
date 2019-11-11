@@ -147,6 +147,8 @@ public:
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
     void sentDealBillListDone();
+    void sentDealAttachmentDone();
+
 public slots:
         void userLoginInterfaceReply(QNetworkReply *reply);
         void dealGetBillList(QNetworkReply *reply);

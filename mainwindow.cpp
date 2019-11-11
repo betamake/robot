@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QDebug>
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -8,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     VoiceControl = new voiceControl(this);
     VoiceControl->initMedia();
     ui->userLabel->hide();
+
+    mBillList.clear();
+    mAttachmentList.clear();
 }
 
 MainWindow::~MainWindow()
@@ -249,37 +253,13 @@ void MainWindow::getAllBills()
     //to do
     //获取当前登录人员的所有待处理的单据
 
-    //目前还没有接口获得票据列表的操作，先留存
-
-    //假设有两张票据
-//    int count = 2;
-
-//    ui->tableWidget->setRowCount(count);
-//    ui->tableWidget->setColumnCount(5);
-//    //清空内容但不清空表头
-//    ui->tableWidget->clearContents();
-
-//    for (int i=0; i<count; i++){
-//        QString numberStr = "0011";         //单据编号
-//        QString dateStr = "2019-10-22";     //日期
-//        double account = 1900.0;             //金额
-//        QString digestStr = "摘要";           //摘要
-
-//        QPushButton *btn = new QPushButton("提交票据");
-
-//        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(numberStr));
-//        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(dateStr));
-//        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(account)));
-//        ui->tableWidget->setItem(i, 3, new QTableWidgetItem(digestStr));
-//        ui->tableWidget->setCellWidget(i, 4, btn);
-
-//        connect(btn, &QPushButton::clicked, this, &MainWindow::startBillEmit);
-//    }
-
     //接入数据
 
     QList<billInfo> list =interfaceUser::getinstance()->getList();
     int count = list.count();
+
+    mBillList.clear();
+    mBillList = list;
 
     ui->tableWidget->setRowCount(count);
     ui->tableWidget->setColumnCount(5);
@@ -292,14 +272,12 @@ void MainWindow::getAllBills()
         QString numberStr = info.billCode;         //单据编号
         QString dateStr = info.billDate;     //日期
         QString accountStr = info.billMoney;
-//        double account = info.billMoney;             //金额
         QString digestStr = info.billUse;           //摘要
 
         QPushButton *btn = new QPushButton("提交票据");
 
         ui->tableWidget->setItem(i, 0, new QTableWidgetItem(numberStr));
         ui->tableWidget->setItem(i, 1, new QTableWidgetItem(dateStr));
-//        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(account)));
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(accountStr));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(digestStr));
         ui->tableWidget->setCellWidget(i, 4, btn);
@@ -316,9 +294,16 @@ void MainWindow::startBillEmit()
     qDebug() << "选择了第" << index << "张票据" ;
 
     //从单据列表List中找到第index条项目，然后解析获得它的附件列表，接着填入附件列表页
+    billInfo info = mBillList.at(index);
+    QString strCode = info.billCode;
+//    QMessageBox::information(this, "", strCode, QMessageBox::Ok);
+
+    interfaceUser::getinstance()->setBillCode(strCode);
+    interfaceUser::getinstance()->getbillAttachment();
+    connect(interfaceUser::getinstance(), &interfaceUser::sentDealAttachmentDone, this, &MainWindow::getAttachments);
 
     ui->stackedWidget->setCurrentIndex(7);
-    getDocumentsListWidget(index);
+//    getDocumentsListWidget(index);
 }
 /**
  * @brief 附件列表页实现
@@ -397,6 +382,101 @@ void MainWindow::getDocumentsListWidget(int index)
 
             scheduleItem *newItem = new scheduleItem();
             newItem->setTypeAndIndex(2, i);
+            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
+
+            othersList->addItem(item1);
+            othersList->setItemWidget(item1, newItem);
+        }
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setSizeHint(size);
+
+        ui->billListWidget->addItem(item);
+        ui->billListWidget->setItemWidget(item, othersList);
+    }
+}
+/**
+ * @brief 获得票据附件列表并将它们显示在列表页中
+ * @param
+ * @return
+ * @time 2019-11-10
+ */
+void MainWindow::getAttachments()
+{
+    mAttachmentList.clear();
+    mAttachmentList = interfaceUser::getinstance()->getAttachment();
+
+    qDebug() << mAttachmentList.size();
+
+    int billCount = 0;  //发票数量
+    int otherCount = 0; //其他数量
+
+    QList<attachment> billAttList;
+    QList<attachment> otherAttList;
+
+    //先获得发票和其他的数量
+    for(int i=0; i<mAttachmentList.size(); i++){
+        attachment info = mAttachmentList.at(i);
+        if (info.attachmentType == "发票"){
+            billCount += 1;
+            billAttList.push_back(info);
+        }
+        else{
+            otherCount += 1;
+            otherAttList.push_back(info);
+        }
+    }
+
+    if (billCount > 0) {
+        QListWidget *billsList = new QListWidget();
+        QSize size = QSize(750, billCount * 110 + 50);
+        billsList->setFixedSize(size);
+
+        billsList->addItem("发票");
+
+        for (int i = 0; i<billCount; i++){
+            QListWidgetItem *item1 = new QListWidgetItem();
+            item1->setSizeHint(QSize(720, 110));
+
+            attachment attach = billAttList.at(i);
+
+            QString type = attach.invoiceType;
+            QString code = attach.attachmentId;
+
+            billItem *newItem = new billItem();
+            newItem->setIndex(i);
+            newItem->setType(type);
+            newItem->setCode(code);
+            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
+
+            billsList->addItem(item1);
+            billsList->setItemWidget(item1, newItem);
+        }
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setSizeHint(size);
+
+        ui->billListWidget->addItem(item);
+        ui->billListWidget->setItemWidget(item, billsList);
+    }
+
+    if (otherCount > 0) {
+        QListWidget *othersList = new QListWidget();
+        QSize size = QSize(750, otherCount * 110 + 50);
+        othersList->setFixedSize(size);
+
+        othersList->addItem("其他");
+
+        for (int i=0; i<otherCount; i++) {
+            QListWidgetItem *item1 = new QListWidgetItem();
+            item1->setSizeHint(QSize(720, 110));
+
+            attachment attach = otherAttList.at(i);
+            QString name = attach.attachmentName;
+
+            scheduleItem *newItem = new scheduleItem();
+            newItem->setTypeAndIndex(2, i);
+            newItem->setName(name);
             connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
 
             othersList->addItem(item1);
@@ -535,20 +615,7 @@ void MainWindow::on_zhichuButton_clicked()
 {
     interfaceUser::getinstance()->setBillType ("FY");
     interfaceUser::getinstance()->getBillList();
-//    connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(deal_zhichuButton_slot()));
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
-
-}
-/*
-@brief:支出附件槽函数
-@param:无
-@return:无
-@time:2019-10-19
-*/
-void MainWindow::deal_zhichuButton_slot ()
-{
-    //接入数据
-
 }
 
 void MainWindow::on_chaiLvButton_clicked()
@@ -558,10 +625,6 @@ void MainWindow::on_chaiLvButton_clicked()
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
 }
-void MainWindow::deal_chaiLvButton_slot ()
-{
-    //接入数据
-}
 
 void MainWindow::on_chuguoButton_clicked()
 {
@@ -569,10 +632,6 @@ void MainWindow::on_chuguoButton_clicked()
     interfaceUser::getinstance()->getBillList();
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
-}
-void MainWindow::deal_chuguoButton_slot ()
-{
-    //接入数据
 }
 
 void MainWindow::on_qingkuanButton_clicked()
@@ -582,10 +641,6 @@ void MainWindow::on_qingkuanButton_clicked()
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
 }
-void MainWindow::deal_qingkuanButton_slot()
-{
-    //接入数据
-}
 
 void MainWindow::on_huankuanButton_clicked()
 {
@@ -593,10 +648,6 @@ void MainWindow::on_huankuanButton_clicked()
     interfaceUser::getinstance()->getBillList();
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
-}
-void MainWindow::deal_huankuanButton_slot()
-{
-    //接入数据
 }
 
 void MainWindow::on_neibuButton_clicked()
@@ -606,10 +657,6 @@ void MainWindow::on_neibuButton_clicked()
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
 }
-void MainWindow::deal_neibuButton_slot()
-{
-    //接入数据
-}
 
 void MainWindow::on_lingyongButton_clicked()
 {
@@ -617,10 +664,6 @@ void MainWindow::on_lingyongButton_clicked()
     interfaceUser::getinstance()->getBillList();
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
-}
-void MainWindow::deal_lingyongButton_slot()
-{
-    //接入数据
 }
 
 void MainWindow::on_zhanshouButton_clicked()
@@ -630,11 +673,6 @@ void MainWindow::on_zhanshouButton_clicked()
     connect(interfaceUser::getinstance(),SIGNAL(sentDealBillListDone()),this,SLOT(getAllBills()));
 
 }
-void MainWindow::deal_zhanshouButton_slot()
-{
-    //接入数据
-}
-
 
 void MainWindow::on_postBillButton_clicked()
 {

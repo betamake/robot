@@ -21,6 +21,16 @@ void scheduleItem::setTypeAndIndex(int type, int index)
     iType = type;
     iIndex = index;
 }
+
+void scheduleItem::setCode(QString strCode)
+{
+    mCode = strCode;
+}
+
+void scheduleItem::setName(QString name)
+{
+    ui->indexLabel->setText(name);
+}
 /**
  * @brief 票据提交按钮
  * @param 无
