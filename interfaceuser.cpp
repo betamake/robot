@@ -117,7 +117,7 @@ void interfaceUser::getBillList()
 */
 void interfaceUser::dealGetBillList(QNetworkReply *reply)
 {
-    qDebug() << "-----------------------getBillList";
+    qDebug() << "-----------------------getBillList"<<reply->error();
     list.clear();
 
     if(reply->error() == QNetworkReply::NoError)
@@ -169,15 +169,16 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
 */
 void interfaceUser::getbillAttachment()
 {
-    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealbillAttachment(QNetworkReply *)));
+    QNetworkAccessManager *billMangerNetwork = new QNetworkAccessManager(this);
+    connect(billMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealbillAttachment(QNetworkReply *)));
     QUrlQuery params;
     params.addQueryItem("billCode",this->getBillCode());
     QString  data = params.toString();
     QNetworkRequest request = HttpRequest.getHttpRequestRemote
             (ipAddress.left(26).append("/reim/robot/billAttachment?").append (data.toUtf8()));
     request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
-    mainMangerNetwork->setCookieJar (managerJar);
-    QNetworkReply *reply = mainMangerNetwork->get (request);
+    billMangerNetwork->setCookieJar (managerJar);
+    QNetworkReply *reply = billMangerNetwork->get (request);
 
 }
 void interfaceUser::dealbillAttachment(QNetworkReply *reply)

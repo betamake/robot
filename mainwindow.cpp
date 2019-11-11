@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 {
     ui->setupUi(this);
     this->setCurrentIndex(0);
-    VoiceControl = new voiceControl(this);
-    VoiceControl->initMedia();
+//    VoiceControl = new voiceControl(this);
+//    VoiceControl->initMedia();
     ui->userLabel->hide();
 
     mBillList.clear();
@@ -37,8 +37,8 @@ void MainWindow::setCurrentIndex(int currentIndex)
 */
 void MainWindow::on_accountButton_clicked()
 {
-    VoiceControl->player->stop();
-    VoiceControl->sendPlayText("请输入账号密码");
+//    VoiceControl->player->stop();
+//    VoiceControl->sendPlayText("请输入账号密码");
     ui->RegPwd_LineEdit->setEchoMode(QLineEdit::Password);
     this->setCurrentIndex(1);
 }
@@ -95,8 +95,8 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 */
 void MainWindow::on_faceButton_clicked()
 {
-    VoiceControl->player->stop();
-    VoiceControl->sendPlayText("请把人脸放入框内");
+//    VoiceControl->player->stop();
+//    VoiceControl->sendPlayText("请把人脸放入框内");
     this->setCurrentIndex(2);
     qDebug()<<"人脸登录"<<CameraDevice::getinstance ()->CameraInfo.getviewfinder ();
      ui->imageLayout->addWidget(CameraDevice::getinstance ()->CameraInfo.getviewfinder ());
