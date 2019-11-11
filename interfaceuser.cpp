@@ -5,7 +5,7 @@ interfaceUser *interfaceUser::instance =NULL;
 interfaceUser::interfaceUser(QObject *parent) : QObject(parent)
 {
     list.clear();
-    ipAddress = "http://211.157.179.73:9580";
+    ipAddress = "http://211.157.179.73:9720";
 //    211.157.179.73:9580/admin/review/view?path=2019/11/04/3f104f448329b00a.txt
 }
 interfaceUser::~interfaceUser(){
@@ -224,4 +224,20 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
             }
         }
     }
+}
+void interfaceUser::saveList()
+{
+    managerJar = new QNetworkCookieJar();
+    mainMangerNetwork = new QNetworkAccessManager();
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));
+    QJsonObject loginJsonObject;
+    loginJsonObject = documentJson.buildJsonObject();
+//    loginJsonObject.insert ("password",this->getPassword());
+//    loginJsonObject.insert ("username",this->getUsername());
+    QJsonDocument document;
+    document.setObject (loginJsonObject);
+    QByteArray loginArray = document.toJson (QJsonDocument::Compact);
+    QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/10gin"));
+    QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
+    mainMangerNetwork->setCookieJar (managerJar);
 }

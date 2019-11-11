@@ -30,6 +30,7 @@ SOURCES += \
     interfaceuser.cpp \
     main.cpp \
     mainwindow.cpp \
+    previewfile.cpp \
     qrdecode.cpp \
     turing.cpp \
     windows/billitem.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     httprequest.h \
     interfaceuser.h \
     mainwindow.h \
+    previewfile.h \
     qrdecode.h \
     turing.h \
     windows/billitem.h \
