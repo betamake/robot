@@ -133,6 +133,8 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
             QJsonObject object = doucment.object();
             QJsonValue dataVal = object.take("msg");
             QString msg = dataVal.toString ();
+            //获得总金额字段
+            QString accountLabel = getAccountLabel();
             if (msg=="操作成功")
             {
                 QJsonValue dataVal  = object.value ("data");
@@ -144,7 +146,7 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     QJsonObject billListValObject = billListVal.toObject ();
                     QString code = billListValObject.value("code").toString();
                     QString billDate = billListValObject.value("billDate").toString();
-                    QString moneyReim =QString::number(billListValObject.value("moneyReim").toInt()) ;
+                    QString moneyReim =QString::number(billListValObject.value(accountLabel).toInt()) ;
                     QString use = billListValObject.value("use").toString();
 
                     billInfo info;
@@ -161,6 +163,34 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
     }
 
     disconnect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealGetBillList(QNetworkReply *)));
+}
+/**
+ * @brief 获得总金额字段
+ * @return
+ */
+QString interfaceUser::getAccountLabel()
+{
+    QString account = "moneyReim";
+
+    QString billType = this->getBillType();
+    if (billType == "FY")
+        account = "moneyReim";
+    else if (billType == "CL")
+        account = "moneyReim";
+    else if (billType == "CG")
+        account = "moneyReim";
+    else if (billType == "QK")
+        account = "moneyLoan";
+    else if (billType == "HK")
+        account = "money";
+    else if (billType == "ZZ")
+        account = "moneyTransferOut";
+    else if (billType == "LY")
+        account = "money";
+    else if (billType == "ZS")
+        account = "money";
+
+    return account;
 }
 /*
 @brief:获取报销单单据号列表

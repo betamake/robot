@@ -77,6 +77,7 @@ public:
     void setBillType(const QString billType){
         this->billType = billType;
     }
+    QString getAccountLabel();
     QString getBillCode(){
         return this->billCode;
     }
