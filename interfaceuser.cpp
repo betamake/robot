@@ -5,7 +5,6 @@ interfaceUser *interfaceUser::instance =NULL;
 interfaceUser::interfaceUser(QObject *parent) : QObject(parent)
 {
     list.clear();
-//    ipAddress = "http://211.157.179.73:9580";
     ipAddress = "http://211.157.179.73:9720";
 //    211.157.179.73:9580/admin/review/view?path=2019/11/04/3f104f448329b00a.txt
 }
@@ -118,7 +117,7 @@ void interfaceUser::getBillList()
 */
 void interfaceUser::dealGetBillList(QNetworkReply *reply)
 {
-    qDebug() << "-----------------------getBillList";
+    qDebug() << "-----------------------getBillList"<<reply->error();
     list.clear();
 
     if(reply->error() == QNetworkReply::NoError)
@@ -135,6 +134,7 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
             QString msg = dataVal.toString ();
             //获得总金额字段
             QString accountLabel = getAccountLabel();
+            QString useLabel = getUseLabel();
             if (msg=="操作成功")
             {
                 QJsonValue dataVal  = object.value ("data");
@@ -146,8 +146,9 @@ void interfaceUser::dealGetBillList(QNetworkReply *reply)
                     QJsonObject billListValObject = billListVal.toObject ();
                     QString code = billListValObject.value("code").toString();
                     QString billDate = billListValObject.value("billDate").toString();
-                    QString moneyReim =QString::number(billListValObject.value(accountLabel).toInt()) ;
-                    QString use = billListValObject.value("use").toString();
+                    //金额保留两位小数
+                    QString moneyReim =QString::number(billListValObject.value(accountLabel).toDouble(), 'f', 2) ;
+                    QString use = billListValObject.value(useLabel).toString();
 
                     billInfo info;
                     info.billUse = use;
@@ -192,6 +193,34 @@ QString interfaceUser::getAccountLabel()
 
     return account;
 }
+/**
+ * @brief 获得摘要字段
+ * @return
+ */
+QString interfaceUser::getUseLabel()
+{
+    QString account = "use";
+
+    QString billType = this->getBillType();
+    if (billType == "FY")
+        account = "use";
+    else if (billType == "CL")
+        account = "use";
+    else if (billType == "CG")
+        account = "use";
+    else if (billType == "QK")
+        account = "use";
+    else if (billType == "HK")
+        account = "summary";
+    else if (billType == "ZZ")
+        account = "summary";
+    else if (billType == "LY")
+        account = "summary";
+    else if (billType == "ZS")
+        account = "summary";
+
+    return account;
+}
 /*
 @brief:获取报销单单据号列表
 @param:无
@@ -200,15 +229,16 @@ QString interfaceUser::getAccountLabel()
 */
 void interfaceUser::getbillAttachment()
 {
-    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealbillAttachment(QNetworkReply *)));
+    QNetworkAccessManager *billMangerNetwork = new QNetworkAccessManager(this);
+    connect(billMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(dealbillAttachment(QNetworkReply *)));
     QUrlQuery params;
     params.addQueryItem("billCode",this->getBillCode());
     QString  data = params.toString();
     QNetworkRequest request = HttpRequest.getHttpRequestRemote
             (ipAddress.left(26).append("/reim/robot/billAttachment?").append (data.toUtf8()));
     request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
-    mainMangerNetwork->setCookieJar (managerJar);
-    QNetworkReply *reply = mainMangerNetwork->get (request);
+    billMangerNetwork->setCookieJar (managerJar);
+    QNetworkReply *reply = billMangerNetwork->get (request);
 
 }
 void interfaceUser::dealbillAttachment(QNetworkReply *reply)
@@ -238,7 +268,7 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                 {
                     QJsonValue billListVal = dataArray.at (i);
                     QJsonObject billListValObject = billListVal.toObject ();
-                    QString attachmentId = billListValObject.value("invoiceNum").toString();
+                    QString attachmentId = billListValObject.value("id").toString();
                     QString attachmentName = billListValObject.value("name").toString();
                     QString attachmentPath =billListValObject.value("path").toString() ;
                     QString attachmentType = billListValObject.value("type").toString();        //发票、其他
@@ -256,4 +286,20 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
             }
         }
     }
+}
+void interfaceUser::saveList()
+{
+    managerJar = new QNetworkCookieJar();
+    mainMangerNetwork = new QNetworkAccessManager();
+    connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));
+    QJsonObject loginJsonObject;
+    loginJsonObject = documentJson.buildJsonObject();
+//    loginJsonObject.insert ("password",this->getPassword());
+//    loginJsonObject.insert ("username",this->getUsername());
+    QJsonDocument document;
+    document.setObject (loginJsonObject);
+    QByteArray loginArray = document.toJson (QJsonDocument::Compact);
+    QNetworkRequest request = HttpRequest.getHttpRequestRemote(ipAddress.left(26).append("/10gin"));
+    QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
+    mainMangerNetwork->setCookieJar (managerJar);
 }

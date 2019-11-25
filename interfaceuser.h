@@ -12,6 +12,7 @@
 #include <httprequest.h>
 #include <QUrlQuery>
 #include <QJsonArray>
+#include "documentjson.h"
 /*
 @brief:后端接口类
 @time:2019-10-17
@@ -78,6 +79,7 @@ public:
         this->billType = billType;
     }
     QString getAccountLabel();
+    QString getUseLabel();
     QString getBillCode(){
         return this->billCode;
     }
@@ -142,6 +144,7 @@ public:
     static interfaceUser *getinstance();
     void getBillList();
     void getbillAttachment();
+    void saveList();
 
 signals:
     void UserLoginDone(QString realName,QString loginMsg);
@@ -176,6 +179,7 @@ private:
 
     billInfoList list;
     attachmentList aList;
+    DocumentJson documentJson;
 };
 
 #endif // INTERFACEUSER_H

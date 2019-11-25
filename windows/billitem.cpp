@@ -6,6 +6,12 @@ billItem::billItem(QWidget *parent) :
     ui(new Ui::billItem)
 {
     ui->setupUi(this);
+
+    group = new QButtonGroup(this);
+    group->addButton(ui->radioButton, 0);      //电子发票
+    group->addButton(ui->radioButton_2, 1);    //纸质发票
+    ui->radioButton->setChecked(true);
+
     iIndex = -1;
 }
 
@@ -22,10 +28,10 @@ void billItem::setIndex(int index)
 void billItem::setType(QString type)
 {
     if(type == "0"){
-        ui->radioButton_2->clicked(true);
+        ui->radioButton_2->setChecked(true);
     }
     else
-        ui->radioButton->clicked(true);
+        ui->radioButton->setChecked(true);
 }
 
 void billItem::setCode(QString strCode)
@@ -43,4 +49,13 @@ void billItem::setCode(QString strCode)
 void billItem::on_billEmitBtn_clicked()
 {
     emit startBill(0, iIndex);
+}
+
+void billItem::connfirmed(int type, int index)
+{
+    if ((type == 0) && (index==iIndex))
+    {
+        ui->billEmitBtn->setText("已提交");
+        ui->billEmitBtn->setDisabled(true);
+    }
 }

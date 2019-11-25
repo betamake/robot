@@ -6,9 +6,10 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 {
     ui->setupUi(this);
     this->setCurrentIndex(0);
-    VoiceControl = new voiceControl(this);
-    VoiceControl->initMedia();
-    ui->userLabel->hide();
+//    VoiceControl = new voiceControl(this);
+//    VoiceControl->initMedia();
+
+    initView();
 
     mBillList.clear();
     mAttachmentList.clear();
@@ -17,6 +18,24 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::initView()
+{
+    ui->userLabel->hide();
+
+    btnGroup = new QButtonGroup();
+    btnGroup->addButton(ui->zhichuButton);
+    btnGroup->addButton(ui->chaiLvButton);
+    btnGroup->addButton(ui->chuguoButton);
+    btnGroup->addButton(ui->qingkuanButton);
+    btnGroup->addButton(ui->huankuanButton);
+    btnGroup->addButton(ui->neibuButton);
+    btnGroup->addButton(ui->lingyongButton);
+    btnGroup->addButton(ui->zhanshouButton);
+    btnGroup->setExclusive(true);
+
+
 }
 /*
 @brief:实现页面跳转
@@ -37,8 +56,8 @@ void MainWindow::setCurrentIndex(int currentIndex)
 */
 void MainWindow::on_accountButton_clicked()
 {
-    VoiceControl->player->stop();
-    VoiceControl->sendPlayText("请输入账号密码");
+//    VoiceControl->player->stop();
+//    VoiceControl->sendPlayText("请输入账号密码");
     ui->RegPwd_LineEdit->setEchoMode(QLineEdit::Password);
     this->setCurrentIndex(1);
 }
@@ -95,8 +114,8 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
 */
 void MainWindow::on_faceButton_clicked()
 {
-    VoiceControl->player->stop();
-    VoiceControl->sendPlayText("请把人脸放入框内");
+//    VoiceControl->player->stop();
+//    VoiceControl->sendPlayText("请把人脸放入框内");
     this->setCurrentIndex(2);
     qDebug()<<"人脸登录"<<CameraDevice::getinstance ()->CameraInfo.getviewfinder ();
      ui->imageLayout->addWidget(CameraDevice::getinstance ()->CameraInfo.getviewfinder ());
@@ -313,87 +332,87 @@ void MainWindow::startBillEmit()
  */
 void MainWindow::getDocumentsListWidget(int index)
 {
-    qDebug() << "打开了第" << index << "张票据" ;
+//    qDebug() << "打开了第" << index << "张票据" ;
 
-    int billCount = 2;  //假设有2张发票
-    int scheduleCount = 0;  //假设有0张会议日程
-    int otherCount = 2; //假设有2张其他票据
+//    int billCount = 2;  //假设有2张发票
+//    int scheduleCount = 0;  //假设有0张会议日程
+//    int otherCount = 2; //假设有2张其他票据
 
-    if (billCount > 0) {
-        QListWidget *billsList = new QListWidget();
-        QSize size = QSize(750, billCount * 110 + 50);
-        billsList->setFixedSize(size);
+//    if (billCount > 0) {
+//        QListWidget *billsList = new QListWidget();
+//        QSize size = QSize(750, billCount * 110 + 50);
+//        billsList->setFixedSize(size);
 
-        billsList->addItem("发票");
+//        billsList->addItem("发票");
 
-        for (int i = 0; i<billCount; i++){
-            QListWidgetItem *item1 = new QListWidgetItem();
-            item1->setSizeHint(QSize(720, 110));
+//        for (int i = 0; i<billCount; i++){
+//            QListWidgetItem *item1 = new QListWidgetItem();
+//            item1->setSizeHint(QSize(720, 110));
 
-            billItem *newItem = new billItem();
-            newItem->setIndex(i);
-            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
+//            billItem *newItem = new billItem();
+//            newItem->setIndex(i);
+//            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
 
-            billsList->addItem(item1);
-            billsList->setItemWidget(item1, newItem);
-        }
+//            billsList->addItem(item1);
+//            billsList->setItemWidget(item1, newItem);
+//        }
 
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(size);
+//        QListWidgetItem *item = new QListWidgetItem();
+//        item->setSizeHint(size);
 
-        ui->billListWidget->addItem(item);
-        ui->billListWidget->setItemWidget(item, billsList);
-    }
-    if (scheduleCount > 0) {
-        QListWidget *othersList = new QListWidget();
-        QSize size = QSize(750, scheduleCount * 110 + 50);
-        othersList->setFixedSize(size);
+//        ui->billListWidget->addItem(item);
+//        ui->billListWidget->setItemWidget(item, billsList);
+//    }
+//    if (scheduleCount > 0) {
+//        QListWidget *othersList = new QListWidget();
+//        QSize size = QSize(750, scheduleCount * 110 + 50);
+//        othersList->setFixedSize(size);
 
-        othersList->addItem("会议日程");
+//        othersList->addItem("会议日程");
 
-        for (int i=0; i<scheduleCount; i++) {
-            QListWidgetItem *item1 = new QListWidgetItem();
-            item1->setSizeHint(QSize(720, 110));
+//        for (int i=0; i<scheduleCount; i++) {
+//            QListWidgetItem *item1 = new QListWidgetItem();
+//            item1->setSizeHint(QSize(720, 110));
 
-            scheduleItem *newItem = new scheduleItem();
-            newItem->setTypeAndIndex(1, i);
-            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
+//            scheduleItem *newItem = new scheduleItem();
+//            newItem->setTypeAndIndex(1, i);
+//            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
 
-            othersList->addItem(item1);
-            othersList->setItemWidget(item1, newItem);
-        }
+//            othersList->addItem(item1);
+//            othersList->setItemWidget(item1, newItem);
+//        }
 
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(size);
+//        QListWidgetItem *item = new QListWidgetItem();
+//        item->setSizeHint(size);
 
-        ui->billListWidget->addItem(item);
-        ui->billListWidget->setItemWidget(item, othersList);
-    }
-    if (otherCount > 0) {
-        QListWidget *othersList = new QListWidget();
-        QSize size = QSize(750, otherCount * 110 + 50);
-        othersList->setFixedSize(size);
+//        ui->billListWidget->addItem(item);
+//        ui->billListWidget->setItemWidget(item, othersList);
+//    }
+//    if (otherCount > 0) {
+//        QListWidget *othersList = new QListWidget();
+//        QSize size = QSize(750, otherCount * 110 + 50);
+//        othersList->setFixedSize(size);
 
-        othersList->addItem("其他");
+//        othersList->addItem("其他");
 
-        for (int i=0; i<otherCount; i++) {
-            QListWidgetItem *item1 = new QListWidgetItem();
-            item1->setSizeHint(QSize(720, 110));
+//        for (int i=0; i<otherCount; i++) {
+//            QListWidgetItem *item1 = new QListWidgetItem();
+//            item1->setSizeHint(QSize(720, 110));
 
-            scheduleItem *newItem = new scheduleItem();
-            newItem->setTypeAndIndex(2, i);
-            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
+//            scheduleItem *newItem = new scheduleItem();
+//            newItem->setTypeAndIndex(2, i);
+//            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
 
-            othersList->addItem(item1);
-            othersList->setItemWidget(item1, newItem);
-        }
+//            othersList->addItem(item1);
+//            othersList->setItemWidget(item1, newItem);
+//        }
 
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(size);
+//        QListWidgetItem *item = new QListWidgetItem();
+//        item->setSizeHint(size);
 
-        ui->billListWidget->addItem(item);
-        ui->billListWidget->setItemWidget(item, othersList);
-    }
+//        ui->billListWidget->addItem(item);
+//        ui->billListWidget->setItemWidget(item, othersList);
+//    }
 }
 /**
  * @brief 获得票据附件列表并将它们显示在列表页中
@@ -411,19 +430,21 @@ void MainWindow::getAttachments()
     int billCount = 0;  //发票数量
     int otherCount = 0; //其他数量
 
-    QList<attachment> billAttList;
-    QList<attachment> otherAttList;
+    mBillAttList.clear();
+    mOtherAttList.clear();
+
+    ui->billListWidget->clear();
 
     //先获得发票和其他的数量
-    for(int i=0; i<mAttachmentList.size(); i++){
+    for(int i=0; i<mAttachmentList.size(); i++) {
         attachment info = mAttachmentList.at(i);
         if (info.attachmentType == "发票"){
             billCount += 1;
-            billAttList.push_back(info);
+            mBillAttList.push_back(info);
         }
         else{
             otherCount += 1;
-            otherAttList.push_back(info);
+            mOtherAttList.push_back(info);
         }
     }
 
@@ -438,7 +459,7 @@ void MainWindow::getAttachments()
             QListWidgetItem *item1 = new QListWidgetItem();
             item1->setSizeHint(QSize(720, 110));
 
-            attachment attach = billAttList.at(i);
+            attachment attach = mBillAttList.at(i);
 
             QString type = attach.invoiceType;
             QString code = attach.attachmentId;
@@ -448,6 +469,7 @@ void MainWindow::getAttachments()
             newItem->setType(type);
             newItem->setCode(code);
             connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
+            connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
 
             billsList->addItem(item1);
             billsList->setItemWidget(item1, newItem);
@@ -471,13 +493,14 @@ void MainWindow::getAttachments()
             QListWidgetItem *item1 = new QListWidgetItem();
             item1->setSizeHint(QSize(720, 110));
 
-            attachment attach = otherAttList.at(i);
+            attachment attach = mOtherAttList.at(i);
             QString name = attach.attachmentName;
 
             scheduleItem *newItem = new scheduleItem();
             newItem->setTypeAndIndex(2, i);
             newItem->setName(name);
             connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
+            connect(this, &MainWindow::confirmAttDone, newItem, &scheduleItem::connfirmed);
 
             othersList->addItem(item1);
             othersList->setItemWidget(item1, newItem);
@@ -501,14 +524,13 @@ void MainWindow::startEmit(int type, int index)
     if (type == 0) {
         //发票
         //在发票列表中查找相应的发票，用于比较发票是否正确
+        attType = 0;
+        attIndex = index;
 
-    } else if (type == 1) {
-        //日程
-        //在日程列表中查找相应的发票，用于比较发票是否正确
-
-    } else if (type == 2) {
+    } else {
         //其他
-        //在其他列表中查找相应的发票，用于比较发票是否正确
+        attType = 1;
+        attIndex = index;
 
     }
 }
@@ -520,7 +542,8 @@ void MainWindow::startEmit(int type, int index)
  */
 void MainWindow::on_emitFinishBtn_clicked()
 {
-
+    QMessageBox::warning(this, "", "请确认是否全部提交？");
+    ui->stackedWidget->setCurrentIndex(6);
 }
 /**
  * @brief 票据列表页面取消按钮
@@ -530,7 +553,7 @@ void MainWindow::on_emitFinishBtn_clicked()
  */
 void MainWindow::on_emitCancelBtn_clicked()
 {
-
+    ui->stackedWidget->setCurrentIndex(6);
 }
 /**
  * @brief 开始扫描按钮
@@ -583,8 +606,7 @@ void MainWindow::on_confirmBtn_clicked()
 {
     this->setCurrentIndex(7);
     //to do
-    //从全局的发票结构体中获得需要显示的字段并显示在相应的edit中
-
+    emit confirmAttDone(attType, attIndex);
 
 }
 /**
@@ -715,4 +737,9 @@ void MainWindow::on_chatButton_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     ui->tableWidget->clearContents();
+}
+
+void MainWindow::on_scanBackBtn_clicked()
+{
+    this->setCurrentIndex(7);
 }

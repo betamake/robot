@@ -27,8 +27,13 @@ public:
 signals:
     void startSchedule(int type, int index);
 
+public slots:
+    void connfirmed(int type, int index);
+
 private slots:
     void on_scheduleEmitBtn_clicked();
+
+
 
 private:
     Ui::scheduleItem *ui;
