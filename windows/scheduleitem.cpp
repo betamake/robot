@@ -1,6 +1,6 @@
+﻿//#pragma execution_character_set(“utf-8”)
 #include "scheduleitem.h"
 #include "ui_scheduleitem.h"
-
 scheduleItem::scheduleItem(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::scheduleItem)

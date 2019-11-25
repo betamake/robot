@@ -6,7 +6,6 @@ interfaceUser::interfaceUser(QObject *parent) : QObject(parent)
 {
     list.clear();
     ipAddress = "http://211.157.179.73:9720";
-//    211.157.179.73:9580/admin/review/view?path=2019/11/04/3f104f448329b00a.txt
 }
 interfaceUser::~interfaceUser(){
     delete instance;
@@ -51,7 +50,7 @@ void interfaceUser::userLogin()
 */
 void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
 {
-    qDebug()<<"进入槽函数";
+//    qDebug()<<"进入槽函数";
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();

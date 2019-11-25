@@ -1,6 +1,6 @@
+﻿//#pragma execution_character_set(“utf-8”)
 #include "billitem.h"
 #include "ui_billitem.h"
-
 billItem::billItem(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::billItem)

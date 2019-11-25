@@ -93,16 +93,16 @@ void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
    if(msg == "登录成功")
    {
        this->setCurrentIndex(5);
-       qDebug()<<"当前用户："<<realName;
+//       qDebug()<<"当前用户："<<realName;
        ui->userInfoLabel->setText(realName);
    }
    else {
        if (loginType =="face"){
-           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
+//           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
            this->setCurrentIndex(3);
        }
        else {
-           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
+//           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
        }
    }
 }
@@ -152,7 +152,7 @@ void MainWindow::dealFaceCheckDone ()
 */
 void MainWindow::dealFaceCheckFailure ()
 {
-    QMessageBox::information(this, QString::fromUtf8("未检测到您"),QString::fromUtf8("请注册"));
+//    QMessageBox::information(this, QString::fromUtf8("未检测到您"),QString::fromUtf8("请注册"));
     this->setCurrentIndex(3);
     CameraDevice::getinstance ()->quit ();
     CameraDevice::getinstance ()->wait ();
@@ -202,7 +202,7 @@ void MainWindow::dealFaceRegSucess ()
 */
 void MainWindow::dealFaceRegFailure ()
 {
-    QMessageBox::information(this, QString::fromUtf8("注册失败"),QString::fromUtf8("请重新注册"));
+//    QMessageBox::information(this, QString::fromUtf8("注册失败"),QString::fromUtf8("请重新注册"));
     this->setCurrentIndex(3);
     faceReg::getinstance ()->quit ();
     faceReg::getinstance ()->wait ();
@@ -312,7 +312,7 @@ void MainWindow::getAllBills()
 void MainWindow::startBillEmit()
 {
     int index = ui->tableWidget->currentRow();
-    qDebug() << "选择了第" << index << "张票据" ;
+//    qDebug() << "选择了第" << index << "张票据" ;
 
     //从单据列表List中找到第index条项目，然后解析获得它的附件列表，接着填入附件列表页
     billInfo info = mBillList.at(index);

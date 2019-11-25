@@ -1,4 +1,4 @@
-#include "qrdecode.h"
+﻿#include "qrdecode.h"
 QrDecode *QrDecode::instance =NULL;
 QrDecode::QrDecode(QObject *parent) : QThread(parent)
 {
@@ -113,7 +113,7 @@ void QrDecode::QrCheck ()
 {
     if(QCamera::ActiveStatus == QrInfo.getcamera ()->status())
     {
-        qDebug()<<"第" << facetime << "次查询二维码";
+//        qDebug()<<"第" << facetime << "次查询二维码";
         facetime++;
         idFace = 2;//登录查人脸
         QrInfo.getimageCapture ()->capture();

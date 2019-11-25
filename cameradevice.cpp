@@ -115,21 +115,21 @@ QByteArray CameraDevice::getPixmapData(QString filePath,QImage image)
 */
 void CameraDevice::faceCheck ()
 {
-    qDebug()<<"第" << facetime << "次查询人脸"<<CameraInfo.getcamera ()->status();
+//    qDebug()<<"第" << facetime << "次查询人脸"<<CameraInfo.getcamera ()->status();
     if(QCamera::ActiveStatus == CameraInfo.getcamera ()->status())
     {
-        qDebug()<<"第" << facetime << "次查询人脸";
+//        qDebug()<<"第" << facetime << "次查询人脸";
         facetime++;
         idFace = 2;//登录查人脸
         CameraInfo.getimageCapture ()->capture();
         //take photos
         if(facetime < 4)
         {
-            qDebug()<<"第" << "facetime" << "次查询人脸";
+//            qDebug()<<"第" << "facetime" << "次查询人脸";
             connect(CameraInfo.getimageCapture (), SIGNAL(imageCaptured(int,QImage)), this, SLOT(sendPhoto(int,QImage)));
         }else
         {
-            qDebug() << "face check failed, stop send photos"<< endl;
+//            qDebug() << "face check failed, stop send photos"<< endl;
             sentIndex=6;
             if(timer->isActive ())
             {

@@ -181,7 +181,7 @@ void voiceControl::voiceReply(QNetworkReply * reply){
         //        qDebug()<<"开始识别语音："<<all<<endl;
         QJsonParseError jsonError;
         QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);  // 转化为 JSON 文档
-        qDebug()<<"识别语音："<<QString(doucment.toJson()).replace("\n","").replace("\"","")<<endl;
+//        qDebug()<<"识别语音："<<QString(doucment.toJson()).replace("\n","").replace("\"","")<<endl;
         if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {//JSON转换未出错
             if(doucment.isObject()){ // JSON 文档为对象
                 QJsonObject object = doucment.object();
@@ -231,13 +231,13 @@ void voiceControl::voiceReply(QNetworkReply * reply){
                             }
                         }
                     }
-                    qDebug()<<"返回结果："<<resultStr<<endl;
+//                    qDebug()<<"返回结果："<<resultStr<<endl;
 //                    this->instructionExp(instruction_number);
                 }
 
                 else
                 {
-                    qDebug()<<"语音识别失败:"<<endl;
+//                    qDebug()<<"语音识别失败:"<<endl;
 
                 }
             }
@@ -320,7 +320,7 @@ void voiceControl::playChanged()
     if( QMediaPlayer::StoppedState==  player->state() && playStatus == true){
         //播放结束时，继续开启语音识别功能
         playStatus = false;
-        qDebug()<<"语音录制开始"<<endl;
+//        qDebug()<<"语音录制开始"<<endl;
         recordNum = 0;
         recordHigh = 0;
         recordLow = 0;

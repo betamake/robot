@@ -34,7 +34,6 @@ signals:
     void received(const QString &str);
 
 
-/*以下为该类私有成员*/
 private slots:
     void readReply(QNetworkReply *r);
 
@@ -42,7 +41,6 @@ private:
     void initNetwork();
 
 private:
-    //network
     QNetworkAccessManager    mNetworkManager;
     QNetworkRequest          mRequest;
     QString                  mStrUrl;
