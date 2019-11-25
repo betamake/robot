@@ -1,4 +1,4 @@
-#ifndef PREVIEWFILE_H
+﻿#ifndef PREVIEWFILE_H
 #define PREVIEWFILE_H
 
 #include <QtNetwork/QNetworkCookieJar>

@@ -1,9 +1,11 @@
-#ifndef BILLITEM_H
+﻿#ifndef BILLITEM_H
 #define BILLITEM_H
 
 #include <QWidget>
 #include <QButtonGroup>
-
+#include <QtWebEngineWidgets>
+#include <QDialog>
+#include <QStackedLayout>
 /*
 @brief:发票itemview类
 @time:2019-10-21
@@ -37,6 +39,8 @@ private slots:
 
 
 
+    void on_pushButton_clicked();
+
 private:
     Ui::billItem *ui;
     QButtonGroup *group;
@@ -44,6 +48,10 @@ private:
     int iIndex;
     QString type;       //0为纸质发票，1为电子发票
     QString billCode;
+    QString billPath;
+
+    QWebEngineView *m_webView;
+    QDialog *dialog;
 };
 
 #endif // BILLITEM_H

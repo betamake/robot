@@ -2,7 +2,7 @@
 QrDecode *QrDecode::instance =NULL;
 QrDecode::QrDecode(QObject *parent) : QThread(parent)
 {
-    address = "https://aip.baidubce.com/rest/2.0/ocr/v1/qrcode";
+    address = "http://211.157.179.73:9720/admin/qrcode/resolve";
     this->initCamera ();
 
 }
@@ -145,14 +145,12 @@ void QrDecode::sendPhoto (int Id, QImage image)
     if(idFace == 2 && !isFaceOk)
     {
         QByteArray fdata = this->getPixmapData("/files/qr",image);
-        QString access_token ="24.4fca8fcb0a84b53393506e2fa8aa8bbf.2592000.1576684256.282335-17799672";
         QNetworkAccessManager *manager  = new QNetworkAccessManager(this);
         QObject::connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(qrReply(QNetworkReply*)));
         //封装请求参数(看接口文档)
         QUrlQuery params;
         fdata = fdata.toBase64().replace("+","-").replace("/","_");
-        params.addQueryItem("image",fdata);
-        params.addQueryItem("access_token",access_token);
+        params.addQueryItem("file",fdata);
         QString  data = params.toString();
         qDebug()<<"二维码："<<data;
         QNetworkRequest request = HttpRequest.getHttpRequest(address);
