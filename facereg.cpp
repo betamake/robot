@@ -105,6 +105,8 @@ void faceReg::faceCapute ()
 void faceReg::photoRegister(int id,QImage image)
 {
     qDebug()<<"摄像头状态:"<<CameraInfo.getcamera ()->status();
+    qDebug()<<"uid:"<<interfaceUser::getinstance()->getPassword();
+    qDebug()<<"user_info:"<<interfaceUser::getinstance()->getUsername();
     if(QCamera::ActiveStatus == CameraInfo.getcamera ()->status())
      {   QByteArray fdata = this->getPixmapData("/files/regFace/",image);
         //准备发送网络请求和接收应答
@@ -117,8 +119,8 @@ void faceReg::photoRegister(int id,QImage image)
         fdata = fdata.replace("/","_");
         params.addQueryItem("image",fdata);
         params.addQueryItem("group_id","1");
-        params.addQueryItem("uid",InterfaceUser->getPassword());
-        params.addQueryItem("user_info",InterfaceUser->getUsername());
+        params.addQueryItem("uid",interfaceUser::getinstance()->getPassword());
+        params.addQueryItem("user_info",interfaceUser::getinstance()->getUsername());
         params.addQueryItem("imageType",".jpg");
         QString  data = params.toString();
         QNetworkRequest request = HttpRequest.getHttpRequest(address.left(25).append("/face/register/"));

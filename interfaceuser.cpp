@@ -27,6 +27,8 @@ interfaceUser *interfaceUser::getinstance ()
 */
 void interfaceUser::userLogin()
 {
+    qDebug()<<"password:"<<interfaceUser::getinstance()->getPassword();
+    qDebug()<<"username:"<<interfaceUser::getinstance()->getUsername();
     managerJar = new QNetworkCookieJar();
     mainMangerNetwork = new QNetworkAccessManager();
     connect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));

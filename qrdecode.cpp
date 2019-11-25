@@ -2,7 +2,7 @@
 QrDecode *QrDecode::instance =NULL;
 QrDecode::QrDecode(QObject *parent) : QThread(parent)
 {
-    address = "https://api.qzone.work/api/qr.decode";
+    address = "https://aip.baidubce.com/rest/2.0/ocr/v1/qrcode";
     this->initCamera ();
 
 }
@@ -37,7 +37,7 @@ void QrDecode::initCamera ()
     QCameraViewfinder *viewfinder = new QCameraViewfinder();
     QrInfo.setviewfinder (viewfinder);
     QrInfo.getcamera ()->setViewfinder( QrInfo.getviewfinder ());
-    QrInfo.getviewfinder ()->resize(600,400);
+    QrInfo.getviewfinder ()->resize(800,800);
 
     QCameraImageCapture *imageCapture = new QCameraImageCapture(QrInfo.getcamera ());
     QrInfo.setimageCapture (imageCapture);
@@ -144,14 +144,17 @@ void QrDecode::sendPhoto (int Id, QImage image)
 {
     if(idFace == 2 && !isFaceOk)
     {
-        QByteArray fdata = this->getPixmapData("/files/face",image);
+        QByteArray fdata = this->getPixmapData("/files/qr",image);
+        QString access_token ="24.4fca8fcb0a84b53393506e2fa8aa8bbf.2592000.1576684256.282335-17799672";
         QNetworkAccessManager *manager  = new QNetworkAccessManager(this);
         QObject::connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(qrReply(QNetworkReply*)));
         //封装请求参数(看接口文档)
         QUrlQuery params;
         fdata = fdata.toBase64().replace("+","-").replace("/","_");
-        params.addQueryItem("img_file",fdata);
+        params.addQueryItem("image",fdata);
+        params.addQueryItem("access_token",access_token);
         QString  data = params.toString();
+        qDebug()<<"二维码："<<data;
         QNetworkRequest request = HttpRequest.getHttpRequest(address);
         request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
         manager->post(request,params.toString().toUtf8());
