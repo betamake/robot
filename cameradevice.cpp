@@ -242,8 +242,8 @@ void CameraDevice::faceReply (QNetworkReply *reply)
                         //相似度分数大于80,识别成功
                         qDebug() << "user_info:" << user_info;
                         qDebug() << "uid:" << uid;
-                        InterfaceUser->setUsername(user_info);
-                        InterfaceUser->setPassword(uid);
+                        interfaceUser::getinstance()->setUsername(user_info);
+                        interfaceUser::getinstance()->setPassword(uid);
 //                        uname = user_info;
                         isFaceOk = true;
                         CameraInfo.getcamera ()->stop();

@@ -48,4 +48,4 @@ private:
     QString                  mStrUrl;
 };
 
-#endif // TURING_H
+#endif

@@ -168,6 +168,8 @@ void MainWindow::on_RegAcountBtn_clicked()
 {
     interfaceUser::getinstance()->setUsername (ui->RegUsername_LineEdit->text());
     interfaceUser::getinstance()->setPassword (ui->RegPwd_LineEdit->text());
+    qDebug()<<"uid:"<<interfaceUser::getinstance()->getPassword();
+    qDebug()<<"user_info:"<<interfaceUser::getinstance()->getUsername();
     ui->faceRegImageLayout->addWidget(faceReg::getinstance ()->CameraInfo.getviewfinder ());
     faceReg::getinstance ()->CameraInfo.getcamera ()->start();
     faceReg::getinstance ()->moveToThread (faceReg::getinstance ()); //解决类不在一个线程
