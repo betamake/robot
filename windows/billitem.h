@@ -2,6 +2,7 @@
 #define BILLITEM_H
 
 #include <QWidget>
+#include <QButtonGroup>
 
 /*
 @brief:发票itemview类
@@ -28,16 +29,20 @@ public:
 signals:
     void startBill(int type, int index);
 
+public slots:
+    void connfirmed(int type, int index);
+
 private slots:
     void on_billEmitBtn_clicked();
 
+
+
 private:
     Ui::billItem *ui;
+    QButtonGroup *group;
 
     int iIndex;
-
     QString type;       //0为纸质发票，1为电子发票
-
     QString billCode;
 };
 

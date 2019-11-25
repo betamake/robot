@@ -41,3 +41,12 @@ void scheduleItem::on_scheduleEmitBtn_clicked()
 {
     startSchedule(iType, iIndex);
 }
+
+void scheduleItem::connfirmed(int type, int index)
+{
+    if ((type == 1) && (index==iIndex))
+    {
+        ui->scheduleEmitBtn->setText("已提交");
+        ui->scheduleEmitBtn->setDisabled(true);
+    }
+}

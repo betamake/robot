@@ -29,6 +29,12 @@ public:
     void setCurrentIndex(int currentIndex); //实现页面跳转;
     void getDocumentsListWidget(int index);   //附件列表页实现
 
+signals:
+    void confirmAttDone(int type, int index);
+
+private:
+    void initView();
+
 private slots:
     void startBillEmit();  //点击选择票据列表中的“提交票据”按钮，转入报销页面
 
@@ -84,6 +90,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_scanBackBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     int currentIndex; //当前页号
@@ -92,8 +100,13 @@ private:
     Turing *turing;
     QString loginType;
 
+    QButtonGroup *btnGroup;
 
     QList<billInfo> mBillList;
     QList<attachment> mAttachmentList;
+    QList<attachment> mBillAttList;      //发票列表
+    QList<attachment> mOtherAttList;     //其他列表
+    int attType;    //票据类型  0为发票，1为其他
+    int attIndex;   //票据序号
 };
 #endif // MAINWINDOW_H
