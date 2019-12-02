@@ -1,4 +1,4 @@
-#ifndef INTERFACEUSER_H
+﻿#ifndef INTERFACEUSER_H
 #define INTERFACEUSER_H
 #include <QtNetwork/QNetworkCookieJar>
 #include<QtNetwork/QNetworkReply>
@@ -13,6 +13,8 @@
 #include <QUrlQuery>
 #include <QJsonArray>
 #include "documentjson.h"
+#include <QTimer>
+#include <QEventLoop>
 /*
 @brief:后端接口类
 @time:2019-10-17
@@ -66,10 +68,10 @@ public:
     void setRealName(const QString realName){
         this->realName=realName;
     }
-    QString getLoginMsg(){
+    qint16 getLoginMsg(){
         return this->loginMsg;
     }
-    void setLoginMsg(const QString loginMsg){
+    void setLoginMsg(const qint16 loginMsg){
         this->loginMsg = loginMsg;
     }
     QString getBillType(){
@@ -145,9 +147,10 @@ public:
     void getBillList();
     void getbillAttachment();
     void saveList();
+    QByteArray InitGetRequest(QString url,QString obj); //获取远程图片，实现预览。
 
 signals:
-    void UserLoginDone(QString realName,QString loginMsg);
+    void UserLoginDone(QString realName,qint16 loginMsg);
     void sentDealBillListDone();
     void sentDealAttachmentDone();
 
@@ -163,7 +166,7 @@ private:
     QString password;
     //login返回的信息
     QString realName;
-    QString loginMsg;
+    qint16 loginMsg;
     //管理请求的cookie
     QNetworkCookieJar *managerJar;
     QNetworkAccessManager *mainMangerNetwork;

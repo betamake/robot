@@ -1,4 +1,4 @@
-#ifndef QRDECODE_H
+﻿#ifndef QRDECODE_H
 #define QRDECODE_H
 
 #include <QObject>
@@ -27,7 +27,7 @@
 #include <QObject>
 #include <QList>
 #include <QCoreApplication>
-//https://api.qzone.work/doc/qrdecode.html
+#include "interfaceuser.h"
 /*
 @brief:识别二维码
 @time:2019-10-17
@@ -82,7 +82,7 @@ public:
     }
     QrInformation QrInfo;
     static QrDecode *getinstance();
-    QByteArray getPixmapData(QString filePath,QImage image); //
+    QByteArray getPixmapData(QString filePath,QImage image);
     void run();
 
     void initCamera();
@@ -93,6 +93,7 @@ public slots:
     void QrCheck();
     void sendPhoto(int Id, QImage image);
     void qrReply(QNetworkReply *reply);
+//    void qrDone();
 private:
     static QrDecode *instance;
     int currentIndex;

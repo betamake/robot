@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -12,6 +12,7 @@
 #include "billidentify.h"
 #include <QQuickView>
 #include "turing.h"
+#include "scanpage.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -44,12 +45,14 @@ private slots:
     void startEmit(int type, int index);    //获得要提交的票据的信息，用于和扫描的结果对比
 
     void setBillInfo();     //扫描结果显示
+    void dealScanDone();
+    void dealQrDone();
 
 private slots:
     void on_accountButton_clicked();
 
     void on_accountLoginButton_clicked();
-    void dealUserLoginDone(QString realName,QString getMsg);
+    void dealUserLoginDone(QString realName,qint16 getMsg);
 
     void on_faceButton_clicked();
     void dealFaceCheckDone();
@@ -108,5 +111,7 @@ private:
     QList<attachment> mOtherAttList;     //其他列表
     int attType;    //票据类型  0为发票，1为其他
     int attIndex;   //票据序号
+
+    ScanPage *scanPage;
 };
 #endif // MAINWINDOW_H

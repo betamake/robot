@@ -1,3 +1,6 @@
+﻿#if _MSC_VER >= 1600	// MSVC2015 > 1899,	MSVC_VER = 14.0
+#pragma execution_character_set("utf-8")
+#endif
 #include "interfaceuser.h"
 #include <QObject>
 #include <QDebug>
@@ -57,7 +60,7 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
         QJsonParseError jsonError;
         QJsonObject dataObject;
         QString name;
-        QString msg;
+        qint16 msg;
         QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);
         qDebug()<< QString(doucment.toJson()).replace("\n","").replace("\"","").replace(" ","")<<endl;
         if((!doucment.isEmpty()) && jsonError.error == QJsonParseError::NoError)
@@ -65,12 +68,13 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
             if(doucment.isObject())
             {
                 QJsonObject object = doucment.object();
-                if(object.contains ("msg"))
+                if(object.contains ("code"))
                 {
-                    QJsonValue dataVal = object.take("msg");
-                    msg = dataVal.toString ();
+                    QJsonValue dataVal = object.take("code");
+                    msg = dataVal.toInt();
                     this->setLoginMsg(msg);
-                    if (msg =="登录成功")
+
+                    if (msg == 0)
                     {
                             QJsonValue dataVal = object.value ("data");
                             dataObject = dataVal.toObject ();
@@ -80,12 +84,16 @@ void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
                             QJsonValue nameVal = userObject.take ("name");
                             name = nameVal.toString ();
                             this->setRealName(name);
+
                         }
                     }
+                    emit UserLoginDone (this->getRealName(),this->getLoginMsg());
                 }
+
+
            }
         }
-        emit UserLoginDone (this->getRealName(),this->getLoginMsg());
+
 
         //因为获取票据列表的时候会进入这里，先在这里断开登录连接测试代码
         disconnect(mainMangerNetwork,SIGNAL(finished(QNetworkReply *)),this,SLOT(userLoginInterfaceReply(QNetworkReply *)));
@@ -304,3 +312,43 @@ void interfaceUser::saveList()
     QNetworkReply *reply = mainMangerNetwork->post (request,loginArray);
     mainMangerNetwork->setCookieJar (managerJar);
 }
+QByteArray interfaceUser::InitGetRequest(QString url,QString obj)
+{
+    //循环拼接
+    QString baseUrl =url;
+    //构造请求
+    QNetworkRequest request;
+    request.setUrl(QUrl(baseUrl));
+    QNetworkAccessManager *pictureManager = new QNetworkAccessManager();
+    // 发送请求
+    QNetworkReply *pReplay = pictureManager->get(request);
+//    pictureManager->setCookieJar(managerJar);
+    //开启一个局部的事件循环，等待响应结束，退出
+    QEventLoop eventLoop;
+    QObject::connect(pReplay,SIGNAL(finished()), &eventLoop, SLOT(quit()));
+
+    //add timeout deal
+    QTimer *tmpTimer = new QTimer();
+    connect(tmpTimer,SIGNAL(timeout()),&eventLoop, SLOT(quit()));
+    tmpTimer->setSingleShot(true);
+    tmpTimer->start(5000);
+    eventLoop.exec();
+    tmpTimer->stop();
+
+    if (pReplay->error() == QNetworkReply::NoError)
+    {
+        qInfo() << QString("request %1 NoError").arg(obj);
+    }
+    else
+    {
+        qWarning()<<QString("request %1 handle errors here").arg(obj);
+        QVariant statusCodeV = pReplay->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        //statusCodeV是HTTP服务器的相应码，reply->error()是Qt定义的错误码，可以参考QT的文档
+        qWarning()<<QString("request %1 found error ....code: %2 %3").arg(obj).arg(statusCodeV.toInt()).arg((int)pReplay->error());
+        qWarning(qPrintable(pReplay->errorString()));
+    }
+    //获取响应信息
+    QByteArray bytes = pReplay->readAll();
+    return bytes;
+}
+

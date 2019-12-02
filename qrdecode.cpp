@@ -152,7 +152,6 @@ void QrDecode::sendPhoto (int Id, QImage image)
         fdata = fdata.toBase64().replace("+","-").replace("/","_");
         params.addQueryItem("file",fdata);
         QString  data = params.toString();
-        qDebug()<<"二维码："<<data;
         QNetworkRequest request = HttpRequest.getHttpRequest(address);
         request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
         manager->post(request,params.toString().toUtf8());
@@ -180,6 +179,8 @@ void QrDecode::qrReply(QNetworkReply *reply)
                      QJsonValue textVal = dataObject.take ("text");
                      billCode = textVal.toString ();
                      QrInfo.setBillCode(billCode);
+//                     interfaceUser::getinstance()->setBillCode(billCode);
+//                     emit qrDone();
                  }
 
            }

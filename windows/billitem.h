@@ -3,9 +3,10 @@
 
 #include <QWidget>
 #include <QButtonGroup>
-#include <QtWebEngineWidgets>
+//#include <QtWebEngineWidgets>
 #include <QDialog>
 #include <QStackedLayout>
+#include "interfaceuser.h"
 /*
 @brief:发票itemview类
 @time:2019-10-21
@@ -27,7 +28,8 @@ public:
     void setType(QString type);
 
     void setCode(QString strCode);
-
+    void setPath(QString strPath);
+    QByteArray InitGetRequest(QString url,QString obj);
 signals:
     void startBill(int type, int index);
 
@@ -50,7 +52,7 @@ private:
     QString billCode;
     QString billPath;
 
-    QWebEngineView *m_webView;
+//    QWebEngineView *m_webView;
     QDialog *dialog;
 };
 

@@ -1,4 +1,4 @@
-#ifndef BILLIDENTIFY_H
+﻿#ifndef BILLIDENTIFY_H
 #define BILLIDENTIFY_H
 
 #include <QObject>
@@ -21,6 +21,7 @@ class BillIdentify : public QThread
     Q_OBJECT
 public:
     explicit BillIdentify(QObject *parent = nullptr);
+//    QByteArray getPixmapData(QString filePath,QImage image);
     void run();
 signals:
     void success();

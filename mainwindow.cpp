@@ -1,3 +1,6 @@
+﻿#if _MSC_VER >= 1600	// MSVC2015 > 1899,	MSVC_VER = 14.0
+#pragma execution_character_set("utf-8")
+#endif
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
@@ -74,7 +77,7 @@ void MainWindow::on_accountLoginButton_clicked()
     interfaceUser::getinstance()->setUsername(username);
     interfaceUser::getinstance()->setPassword(password);
     interfaceUser::getinstance()->userLogin();
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
     ui->userLabel->show();
@@ -85,12 +88,13 @@ void MainWindow::on_accountLoginButton_clicked()
 @return:无
 @time:2019-10-19
 */
-void MainWindow::dealUserLoginDone(QString realName,QString getMsg)
+void MainWindow::dealUserLoginDone(QString realName,qint16 getMsg)
 {
     QString username = realName;
 
-   QString msg = getMsg;
-   if(msg == "登录成功")
+   qint16 msg = getMsg;
+   qDebug()<<"msg:"<<msg;
+   if(msg == 0)
    {
        this->setCurrentIndex(5);
 //       qDebug()<<"当前用户："<<realName;
@@ -139,7 +143,7 @@ void MainWindow::dealFaceCheckDone ()
     CameraDevice::getinstance ()->wait ();
     interfaceUser::getinstance()->userLogin();
     loginType ="face";
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,QString )),this,SLOT(dealUserLoginDone(QString ,QString )));
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
     ui->userLabel->show();
@@ -258,7 +262,7 @@ void MainWindow::on_shouyePostButton_clicked()
     box.exec();
     if (box.clickedButton() == btn1){
         this->setCurrentIndex(6);
-        //getAllBills();
+//        getAllBills();
 
     } else if (box.clickedButton() == btn2){
         //跳转到扫描报销单页面
@@ -465,11 +469,15 @@ void MainWindow::getAttachments()
 
             QString type = attach.invoiceType;
             QString code = attach.attachmentId;
+            QString path = attach.attachmentPath;
+
 
             billItem *newItem = new billItem();
             newItem->setIndex(i);
             newItem->setType(type);
             newItem->setCode(code);
+            newItem->setPath(path);
+
             connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
             connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
 
@@ -562,13 +570,22 @@ void MainWindow::on_emitCancelBtn_clicked()
  */
 void MainWindow::on_scanStartBtn_clicked()
 {
-    //to do
-    //扫描的过程待实现
+    scanPage = new ScanPage;
+    scanPage->moveToThread (scanPage); //解决类不在一个线程
+    scanPage->start();
+    connect(scanPage,SIGNAL(scanDone()),this,SLOT(dealScanDone()));
 
     //扫描成功并获取发票的信息后，跳转到详情页面
     // to do
     // 将扫描的信息放在发票结构体或类中，在详情页由发票类来获得需要的字段
+
+}
+void MainWindow::dealScanDone()
+{
+    scanPage->quit();
+    scanPage->wait();
     ui->stackedWidget->setCurrentIndex(9);
+    this->on_ceShiButton_clicked();
     setBillInfo();
 }
 /**
@@ -705,10 +722,10 @@ void MainWindow::on_postBillButton_clicked()
     QrDecode::getinstance ()->QrInfo.getcamera ()->start();
     QrDecode::getinstance ()->moveToThread (QrDecode::getinstance ()); //解决类不在一个线程
     QrDecode::getinstance ()->start ();
-//    this->setCurrentIndex(4);
-//    connect(faceReg::getinstance (),SIGNAL(faceRegSucess()),this,SLOT(dealFaceRegSucess()));
-//    connect(faceReg::getinstance (),SIGNAL(faceRegFailure()),this,SLOT(dealFaceRegFailure()));
-
+    connect(QrDecode::getinstance (),SIGNAL(qrDone()),this,SLOT(dealQrDone()));
+}
+void MainWindow::dealQrDone()
+{
 
 }
 

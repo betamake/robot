@@ -5,43 +5,35 @@ BillIdentify::BillIdentify(QObject *parent) : QThread(parent)
 {
     address = "http://192.168.3.185:8000";
 }
+
 void BillIdentify::run()
 {
-    qDebug () <<"111";
-    QString runpath= QCoreApplication::applicationDirPath();
-    QString fileName=runpath+"/finalbill.jpg";
+//    QString runpath= QCoreApplication::applicationDirPath();
+    QString scanBillpath="C:/Users/betamake/Documents/scan.jpg";
 
-    qDebug()<<"runpath:"<<runpath;
-    qDebug() << "fileName:" << fileName;
-        manager = new QNetworkAccessManager(this);
-        //读取完成后识别票据
-        QObject::connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(billReply(QNetworkReply*)));
-
-        QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly)||file.size()==0)
-        {
-            file.close();
-            return ;
-        }
-        QByteArray fdata = file.readAll();
+    qDebug() << "fileName:" << scanBillpath;
+    manager = new QNetworkAccessManager(this);
+    //读取完成后识别票据
+    QObject::connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(billReply(QNetworkReply*)));
+    QFile file(scanBillpath);
+    if (!file.open(QIODevice::ReadOnly)||file.size()==0)
+    {
         file.close();
-        fdata = fdata.toBase64();
-        fdata = fdata.replace("+","-");
-        fdata = fdata.replace("/","_");
-
-        QUrlQuery params;
-        params.addQueryItem("image",fdata);
-        params.addQueryItem("imageType",".jpg");
-        QString  data = params.toString();
-
-//        //打印票据图片编码
-//        this->printFile("billReply.txt", fdata);
-//        //    QString address = HOST.append("/bill/");
-
-        QNetworkRequest request = HttpRequest.getHttpRequest(address.left(25).append("/bill/"));
-        request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
-        manager->post(request,params.toString().toUtf8());
-        exec() ;
+        return ;
+    }
+    QByteArray fdata = file.readAll();
+    file.close();
+    fdata = fdata.toBase64();
+    fdata = fdata.replace("+","-");
+    fdata = fdata.replace("/","_");
+    QUrlQuery params;
+    params.addQueryItem("image",fdata);
+    params.addQueryItem("imageType",".jpg");
+    QString  data = params.toString();
+    QNetworkRequest request = HttpRequest.getHttpRequest(address.left(25).append("/bill/"));
+    request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
+    manager->post(request,params.toString().toUtf8());
+    exec();
 }
 /**
 * @brief       票据识别返回处理
@@ -51,10 +43,8 @@ void BillIdentify::run()
 void BillIdentify::billReply(QNetworkReply * reply){
     //打印结果
     qDebug() << "------票据识别结果------"<<reply->error()<< endl;
-    emit success();
     if(reply->error() ==    QNetworkReply::NoError){
         QByteArray all = reply->readAll();
-        qDebug()<<endl<<endl<<all<<endl;
         QJsonParseError jsonError;
         QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);  // 转化为 JSON 文档
         if((!doucment.isEmpty()) && jsonError.error == QJsonParseError::NoError){//解析未发生错误
@@ -67,31 +57,6 @@ void BillIdentify::billReply(QNetworkReply * reply){
                         success = successVal.toInt();
                     }
                     if(success == 1){
-                        //保存票据电子版附件
-                        QString baseDir = QCoreApplication::applicationDirPath();
-                        QString fileDir = baseDir.append("/files/bill/");
-                        //创建目录
-                        QDir dir;
-                        if(!dir.exists(fileDir))
-                        {
-                            bool res = dir.mkpath(fileDir);
-                            qDebug() << "创建保存票据电子版图片目录结果:" << res;
-                        }
-                        fileDir.append(HttpRequest.getCurrentTime());
-
-                        //获得票据附件名称
-                        QFileInfo filinfo;
-                        filinfo = QFileInfo(fileDir);
-                        billname = filinfo.fileName();
-                        qDebug()<<"billname"<<billname;
-                        fileDir.append(".jpg");
-                        billdir = fileDir;
-                        qDebug()<<"billdir"<<billdir;
-                        blpath.append(billdir);
-                        QImage img(billpath);
-                        QPixmap pixmap = QPixmap::fromImage(img);
-                        pixmap.save(fileDir);
-                        bldir.append(billname);//保存票据识别的附件名称
                         int billType = 0;
                         if(object.contains("type")){
                             QJsonValue typeVal = object.value("type");

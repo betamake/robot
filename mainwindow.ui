@@ -37,8 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>9</number>
-     <number>10</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="huanYingYe">
      <layout class="QGridLayout" name="gridLayout">
