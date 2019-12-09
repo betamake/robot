@@ -537,6 +537,8 @@ void MainWindow::startEmit(int type, int index)
         attType = 0;
         attIndex = index;
 
+        mFapiaoCode = mBillAttList.at(index).attachmentId;
+
     } else {
         //其他
         attType = 1;
@@ -586,8 +588,30 @@ void MainWindow::dealScanDone()
     scanPage->wait();
     ui->stackedWidget->setCurrentIndex(9);
     this->on_ceShiButton_clicked();
+
+    //setBillInfo();        //上面进入扫描，因为会另外开启票据识别的线程，所以不能在这里进行票据的set
+}
+/**
+  *@brief 票据识别后向Mainwindow发送发票信息结构体，这里写入到mFapiaoInfo中
+  */
+void MainWindow::getBillInfo(scanInfo info)
+{
+    //先把结构体清空
+    mFapiaoInfo.billMoney = "";
+    mFapiaoInfo.billCode = "";
+    mFapiaoInfo.billContext = "";
+    mFapiaoInfo.billUse = "";
+
+    //再将扫描出来的结构体的内容依次填入
+    mFapiaoInfo.billMoney = info.billMoney;
+    mFapiaoInfo.billCode = info.billCode;
+    mFapiaoInfo.billContext = info.billContext;
+    mFapiaoInfo.billUse = info.billUse;
+
+    //扫描获得了发票数据之后更新页面中的显示
     setBillInfo();
 }
+
 /**
  * @brief 扫描结果显示
  */
@@ -597,10 +621,10 @@ void MainWindow::setBillInfo()
     //全局发票结构体
 
     //发票信息
-    ui->billAccount->setText("2200");       //金额
-    ui->billNumber->setText("0011");        //发票号
-    ui->billContext->setText("发票内容");   //发票内容
-    ui->billRemarks->setText("发票备注");   //发票备注
+    ui->billAccount->setText(mFapiaoInfo.billMoney);       //金额
+    ui->billNumber->setText(mFapiaoInfo.billCode);        //发票号
+    ui->billContext->setText(mFapiaoInfo.billContext);   //发票内容
+    ui->billRemarks->setText(mFapiaoInfo.billUse);   //发票备注
 
     //销售方信息
     ui->solderTitle->setText("");
@@ -623,6 +647,13 @@ void MainWindow::setBillInfo()
  */
 void MainWindow::on_confirmBtn_clicked()
 {
+    //当要提交的发票号和扫描出来的发票号一致的时候才能正确地跳转回去
+//    if (mFapiaoCode == mFapiaoInfo.billCode)
+//    {
+//        this->setCurrentIndex(7);
+//        emit confirmAttDone(attType, attIndex);
+//    }
+
     this->setCurrentIndex(7);
     //to do
     emit confirmAttDone(attType, attIndex);
@@ -735,6 +766,7 @@ void MainWindow::on_ceShiButton_clicked()
     billIndentify->moveToThread(billIndentify);
     billIndentify->start();
     connect(billIndentify,SIGNAL(success()),this,SLOT(deal_ceShiButton_clicked()));
+    connect(billIndentify, &BillIdentify::fapiaoDone, this, &MainWindow::getBillInfo);
 }
 void MainWindow::deal_ceShiButton_clicked()
 {

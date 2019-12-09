@@ -16,6 +16,14 @@
 #include <QJsonArray>
 #include <QStringList>
 #include <QCoreApplication>
+
+typedef struct{
+    QString billMoney;  //金额
+    QString billCode;   //发票号
+    QString billContext;   //内容
+    QString billUse;    //备注
+} scanInfo;
+
 class BillIdentify : public QThread
 {
     Q_OBJECT
@@ -25,6 +33,7 @@ public:
     void run();
 signals:
     void success();
+    void fapiaoDone(scanInfo info);
 public slots:
     void billReply(QNetworkReply *reply);
 private:

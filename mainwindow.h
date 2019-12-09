@@ -44,6 +44,7 @@ private slots:
 
     void startEmit(int type, int index);    //获得要提交的票据的信息，用于和扫描的结果对比
 
+    void getBillInfo(scanInfo info);    //获得扫描的票据的信息
     void setBillInfo();     //扫描结果显示
     void dealScanDone();
     void dealQrDone();
@@ -111,6 +112,9 @@ private:
     QList<attachment> mOtherAttList;     //其他列表
     int attType;    //票据类型  0为发票，1为其他
     int attIndex;   //票据序号
+
+    QString mFapiaoCode;    //需要提交的发票的code,用于比较扫描出来的是否一致
+    scanInfo mFapiaoInfo;   //识别出来的发票的信息
 
     ScanPage *scanPage;
 };
