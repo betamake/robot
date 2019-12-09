@@ -29,6 +29,7 @@ public:
     ~MainWindow();
     void setCurrentIndex(int currentIndex); //实现页面跳转;
     void getDocumentsListWidget(int index);   //附件列表页实现
+    void userLogin(); //用户登录；
 
 signals:
     void confirmAttDone(int type, int index);

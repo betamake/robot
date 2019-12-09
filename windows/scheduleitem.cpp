@@ -31,6 +31,10 @@ void scheduleItem::setName(QString name)
 {
     ui->indexLabel->setText(name);
 }
+void scheduleItem::setPath(QString strPath)
+{
+    billPath = strPath;
+}
 /**
  * @brief 票据提交按钮
  * @param 无
@@ -49,4 +53,20 @@ void scheduleItem::connfirmed(int type, int index)
         ui->scheduleEmitBtn->setText("已提交");
         ui->scheduleEmitBtn->setDisabled(true);
     }
+}
+
+void scheduleItem::on_pushButton_clicked()
+{
+    QString path = "http://211.157.179.73:9720/admin/review/view?path="+billPath;
+    dialog  = new QDialog(this);
+    dialog->resize(600,600);
+    m_webView = new QWebEngineView(dialog);
+    QStackedLayout* layout = new QStackedLayout(dialog);
+    dialog->setLayout(layout);
+    layout->addWidget(m_webView);
+    qDebug()<<"path:"<<path;
+    m_webView->load(QUrl(path));
+    m_webView->resize(500,500);
+    m_webView->show();
+    dialog->show();
 }

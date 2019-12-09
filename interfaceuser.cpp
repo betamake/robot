@@ -53,7 +53,7 @@ void interfaceUser::userLogin()
 */
 void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
 {
-//    qDebug()<<"进入槽函数";
+    qDebug()<<"进入槽函数";
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();

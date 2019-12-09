@@ -76,11 +76,16 @@ void MainWindow::on_accountLoginButton_clicked()
     QString password = ui->accountPasswordEdit->text();
     interfaceUser::getinstance()->setUsername(username);
     interfaceUser::getinstance()->setPassword(password);
-    interfaceUser::getinstance()->userLogin();
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
+    this->userLogin();
+
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
     ui->userLabel->show();
+}
+void MainWindow::userLogin()
+{
+    interfaceUser::getinstance()->userLogin();
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转。
@@ -97,16 +102,16 @@ void MainWindow::dealUserLoginDone(QString realName,qint16 getMsg)
    if(msg == 0)
    {
        this->setCurrentIndex(5);
-//       qDebug()<<"当前用户："<<realName;
+       qDebug()<<"当前用户："<<realName;
        ui->userInfoLabel->setText(realName);
    }
    else {
        if (loginType =="face"){
-//           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
+           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
            this->setCurrentIndex(3);
        }
        else {
-//           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
+           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
        }
    }
 }
@@ -139,13 +144,12 @@ void MainWindow::on_faceButton_clicked()
 */
 void MainWindow::dealFaceCheckDone ()
 {
+    loginType ="face";
     CameraDevice::getinstance ()->quit ();
     CameraDevice::getinstance ()->wait ();
-    interfaceUser::getinstance()->userLogin();
-    loginType ="face";
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
-    ui->accountUserEdit->clear();
-    ui->accountPasswordEdit->clear();
+
+    this->userLogin();
+//    this->on_accountLoginButton_clicked();
     ui->userLabel->show();
 }
 /*
@@ -505,10 +509,14 @@ void MainWindow::getAttachments()
 
             attachment attach = mOtherAttList.at(i);
             QString name = attach.attachmentName;
+            QString code = attach.attachmentId;
+            QString path = attach.attachmentPath;
 
             scheduleItem *newItem = new scheduleItem();
             newItem->setTypeAndIndex(2, i);
             newItem->setName(name);
+            newItem->setCode(code);
+            newItem->setPath(path);
             connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
             connect(this, &MainWindow::confirmAttDone, newItem, &scheduleItem::connfirmed);
 
@@ -574,6 +582,7 @@ void MainWindow::on_scanStartBtn_clicked()
     scanPage->moveToThread (scanPage); //解决类不在一个线程
     scanPage->start();
     connect(scanPage,SIGNAL(scanDone()),this,SLOT(dealScanDone()));
+
 
     //扫描成功并获取发票的信息后，跳转到详情页面
     // to do
