@@ -125,6 +125,7 @@ void BillIdentify::billReply(QNetworkReply * reply){
 
                             }
 //                            emit costDone ();
+
                             break;
                         case 2://火车票
                             busiType =true;
@@ -207,7 +208,13 @@ void BillIdentify::billReply(QNetworkReply * reply){
                             break;
                         }
 
+                        scanInfo info;
+                        info.billMoney = money;  //金额
+                        info.billCode = billCode;     //编号
+                        info.billContext = billContent;    //内容
+                        info.billUse = type;    //备注，发票暂时没有合适的值，先用类型代替
 
+                        emit fapiaoDone(info);
                     }
                 }
             }
