@@ -90,7 +90,7 @@ public:
     void initCamera();
 signals:
     void qrCheckFailure();
-    void qrDone();
+    void qrDone( QString billCode);
 
 public slots:
     void QrCheck();

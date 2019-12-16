@@ -288,7 +288,7 @@ void interfaceUser::getbillAttachment()
             (ipAddress.left(26).append("/reim/robot/billAttachment?").append (data.toUtf8()));
     request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
     billMangerNetwork->setCookieJar (managerJar);
-    QNetworkReply *reply = billMangerNetwork->get (request);
+    /*QNetworkReply *reply =这里的问题出现在野指针。没有初始化*/ billMangerNetwork->get (request);
 
 }
 void interfaceUser::dealbillAttachment(QNetworkReply *reply)

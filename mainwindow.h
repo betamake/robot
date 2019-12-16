@@ -48,7 +48,7 @@ private slots:
     void getBillInfo(QString code, QString money, QString context, QString use);    //获得扫描的票据的信息
     void setBillInfo();     //扫描结果显示
     void dealScanDone();
-    void dealQrDone();
+    void dealQrDone(QString billCode);
 
 private slots:
     void on_accountButton_clicked();

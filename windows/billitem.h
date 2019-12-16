@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QButtonGroup>
-//#include <QtWebEngineWidgets>
+#include <QtWebEngineWidgets>
 #include <QDialog>
 #include <QStackedLayout>
 #include "interfaceuser.h"
@@ -51,7 +51,7 @@ private:
     QString billCode;
     QString billPath;
 
-//    QWebEngineView *m_webView;
+    QWebEngineView *m_webView;
     QDialog *dialog;
 };
 

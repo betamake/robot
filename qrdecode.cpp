@@ -31,7 +31,7 @@ void QrDecode::initCamera ()
         foreach (const QCameraInfo &cameraInfo, cameras) {
             qDebug()<<cameraInfo.description();
         }
-        QCamera *camera = new QCamera(cameras.at(1));
+        QCamera *camera = new QCamera(cameras.at(0));
         QrInfo.setcamera (camera);
     }
     //登录
@@ -52,7 +52,7 @@ void QrDecode::initCamera ()
 @return:无
 @time:2019-10-30
 */
-void QrDecode::run ()
+void QrDecode::run()
 {
     isFaceOk = false;
     //扫描二维码次数
@@ -186,9 +186,7 @@ void QrDecode::qrReply(QNetworkReply *reply)
                 QJsonObject object = doucment.object();
                 QJsonValue dataVal = object.value ("data");
                  billCode = dataVal.toString ();
-                 QrInfo.setBillCode(billCode);
-                 interfaceUser::getinstance()->setBillCode(billCode);
-                 emit qrDone();
+                 emit qrDone(billCode);
 
            }
         }
