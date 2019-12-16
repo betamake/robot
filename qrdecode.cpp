@@ -2,7 +2,8 @@
 QrDecode *QrDecode::instance =NULL;
 QrDecode::QrDecode(QObject *parent) : QThread(parent)
 {
-    address = "http://211.157.179.73:9720/admin/qrcode/resolve";
+    address = "http://211.157.179.73:9720/admin/qrcode/resolve?";
+//    address = "http://192.168.1.208:9000/admin/attachment/pro/upload?";
     this->initCamera ();
 
 }
@@ -30,7 +31,7 @@ void QrDecode::initCamera ()
         foreach (const QCameraInfo &cameraInfo, cameras) {
             qDebug()<<cameraInfo.description();
         }
-        QCamera *camera = new QCamera(cameras.at(0));
+        QCamera *camera = new QCamera(cameras.at(1));
         QrInfo.setcamera (camera);
     }
     //登录
@@ -71,7 +72,7 @@ void QrDecode::run ()
 @return:无
 @time:2019-10-30
 */
-QByteArray QrDecode::getPixmapData(QString filePath,QImage image)
+QString QrDecode::getPixmapData(QString filePath,QImage image)
 {
     //    qDebug()<<"发送照片";
     QString baseDir = QCoreApplication::applicationDirPath();
@@ -85,23 +86,14 @@ QByteArray QrDecode::getPixmapData(QString filePath,QImage image)
         qDebug() << "创建二维码目录结果:" << res;
     }
 
-    fileDir.append(HttpRequest.getCurrentTime());
+//    fileDir.append(HttpRequest.getCurrentTime());
     fileDir.append(".jpg");
 
     QPixmap pixmap = QPixmap::fromImage(image);
     pixmap.save(fileDir);
     qDebug()<<fileDir<<endl;
 
-    QFile file(fileDir);
-
-    if (!file.open(QIODevice::ReadOnly)||file.size()==0)
-    {
-        file.close();
-        qDebug() << "文件打开失败";
-    }
-    QByteArray fdata = file.readAll();
-    file.close();
-    return fdata;
+    return fileDir;
 }
 /*
 @brief:二维码检测
@@ -115,7 +107,7 @@ void QrDecode::QrCheck ()
     {
 //        qDebug()<<"第" << facetime << "次查询二维码";
         facetime++;
-        idFace = 2;//登录查人脸
+        idFace = 2;
         QrInfo.getimageCapture ()->capture();
         //take photos
         if(facetime < 4)
@@ -144,21 +136,41 @@ void QrDecode::sendPhoto (int Id, QImage image)
 {
     if(idFace == 2 && !isFaceOk)
     {
-        QByteArray fdata = this->getPixmapData("/files/qr",image);
+        QString fileDir = this->getPixmapData("/files/qr_file",image);
+//        QFile file(fileDir);
+
+//        if (!file.open(QIODevice::ReadOnly)||file.size()==0)
+//        {
+//            file.close();
+//            qDebug() << "文件打开失败";
+//        }
+//        QByteArray fdata = file.readAll();
+//        file.close();
+
+
         QNetworkAccessManager *manager  = new QNetworkAccessManager(this);
         QObject::connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(qrReply(QNetworkReply*)));
         //封装请求参数(看接口文档)
-        QUrlQuery params;
-        fdata = fdata.toBase64().replace("+","-").replace("/","_");
-        params.addQueryItem("file",fdata);
-        QString  data = params.toString();
-        QNetworkRequest request = HttpRequest.getHttpRequest(address);
-        request.setHeader(QNetworkRequest::ContentLengthHeader, data.size());
-        manager->post(request,params.toString().toUtf8());
+//通过QHttpMultiPart实现。测试无法通过
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QHttpPart imagePart;
+        imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/jpeg"));
+        imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(QString("form-data; name=\"file\";filename=\"qr_file.jpg\"")));
+        QFile *file = new QFile(fileDir);
+        file->open(QIODevice::ReadOnly);
+        imagePart.setBodyDevice(file);
+        file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
+        multiPart->append(imagePart);
+        //请求地址
+        QUrl url(address);
+        QNetworkRequest request(url);
+        QNetworkReply *reply = manager->post(request,multiPart);
+        multiPart->setParent(reply);
     }
 }
 void QrDecode::qrReply(QNetworkReply *reply)
 {
+    qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).value<int>();
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();
@@ -173,15 +185,10 @@ void QrDecode::qrReply(QNetworkReply *reply)
             {
                 QJsonObject object = doucment.object();
                 QJsonValue dataVal = object.value ("data");
-                dataObject = dataVal.toObject ();
-                if(dataObject.contains ("text"))
-                {
-                     QJsonValue textVal = dataObject.take ("text");
-                     billCode = textVal.toString ();
-                     QrInfo.setBillCode(billCode);
-//                     interfaceUser::getinstance()->setBillCode(billCode);
-//                     emit qrDone();
-                 }
+                 billCode = dataVal.toString ();
+                 QrInfo.setBillCode(billCode);
+                 interfaceUser::getinstance()->setBillCode(billCode);
+                 emit qrDone();
 
            }
         }

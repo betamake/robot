@@ -47,6 +47,7 @@ void BillIdentify::billReply(QNetworkReply * reply){
         QByteArray all = reply->readAll();
         QJsonParseError jsonError;
         QJsonDocument doucment = QJsonDocument::fromJson(all, &jsonError);  // 转化为 JSON 文档
+        qDebug()<< QString(doucment.toJson()).replace("\n","").replace("\"","").replace(" ","")<<endl;
         if((!doucment.isEmpty()) && jsonError.error == QJsonParseError::NoError){//解析未发生错误
             if(doucment.isObject()){
                 QJsonObject object = doucment.object();
@@ -208,13 +209,12 @@ void BillIdentify::billReply(QNetworkReply * reply){
                             break;
                         }
 
-                        scanInfo info;
-                        info.billMoney = money;  //金额
-                        info.billCode = billCode;     //编号
-                        info.billContext = billContent;    //内容
-                        info.billUse = type;    //备注，发票暂时没有合适的值，先用类型代替
-
-                        emit fapiaoDone(info);
+                        //scaninfo.billMoney = billPrice;  //金额
+                        //scaninfo.billCode = billCode;     //编号
+                        //scaninfo.billContext = billGoods;    //内容
+                        //scaninfo.billUse = type;    //备注，发票暂时没有合适的值，先用类型代替
+                        //qDebug() << billPrice << "," << billCode << "," << billGoods;
+                        emit fapiaoDone(billCode, billPrice, billGoods, type);
                     }
                 }
             }

@@ -136,6 +136,16 @@ void MainWindow::on_faceButton_clicked()
      connect (CameraDevice::getinstance (),SIGNAL(faceCheckDone()),this,SLOT(dealFaceCheckDone()));
      connect (CameraDevice::getinstance (),SIGNAL(faceCheckFailure()),this,SLOT(dealFaceCheckFailure()));
 }
+void MainWindow::ceshiButton()
+{
+    interfaceUser::getinstance()->setUsername("535");
+    interfaceUser::getinstance()->setPassword("000000");
+    this->userLogin();
+
+    ui->accountUserEdit->clear();
+    ui->accountPasswordEdit->clear();
+    ui->userLabel->show();
+}
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转到材料提交页。
 @param:无
@@ -145,12 +155,10 @@ void MainWindow::on_faceButton_clicked()
 void MainWindow::dealFaceCheckDone ()
 {
     loginType ="face";
-    CameraDevice::getinstance ()->quit ();
-    CameraDevice::getinstance ()->wait ();
-
+//    CameraDevice::getinstance ()->quit ();
+//    CameraDevice::getinstance ()->wait ();
     this->userLogin();
-//    this->on_accountLoginButton_clicked();
-    ui->userLabel->show();
+
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转到材料提交页。
@@ -160,7 +168,7 @@ void MainWindow::dealFaceCheckDone ()
 */
 void MainWindow::dealFaceCheckFailure ()
 {
-//    QMessageBox::information(this, QString::fromUtf8("未检测到您"),QString::fromUtf8("请注册"));
+    QMessageBox::information(this, QString::fromUtf8("未检测到您"),QString::fromUtf8("请注册"));
     this->setCurrentIndex(3);
     CameraDevice::getinstance ()->quit ();
     CameraDevice::getinstance ()->wait ();
@@ -435,7 +443,7 @@ void MainWindow::getAttachments()
     mAttachmentList.clear();
     mAttachmentList = interfaceUser::getinstance()->getAttachment();
 
-    qDebug() << mAttachmentList.size();
+    qDebug() << "mAttachmentList的数量为" << mAttachmentList.size();
 
     int billCount = 0;  //发票数量
     int otherCount = 0; //其他数量
@@ -552,6 +560,7 @@ void MainWindow::startEmit(int type, int index)
         attType = 1;
         attIndex = index;
 
+        mFapiaoCode = mOtherAttList.at(index).attachmentId;
     }
 }
 /**
@@ -595,27 +604,20 @@ void MainWindow::dealScanDone()
 {
     scanPage->quit();
     scanPage->wait();
-    ui->stackedWidget->setCurrentIndex(9);
     this->on_ceShiButton_clicked();
-
+    ui->stackedWidget->setCurrentIndex(9);
     //setBillInfo();        //上面进入扫描，因为会另外开启票据识别的线程，所以不能在这里进行票据的set
 }
 /**
   *@brief 票据识别后向Mainwindow发送发票信息结构体，这里写入到mFapiaoInfo中
   */
-void MainWindow::getBillInfo(scanInfo info)
+void MainWindow::getBillInfo(QString code, QString money, QString context, QString use)
 {
-    //先把结构体清空
-    mFapiaoInfo.billMoney = "";
-    mFapiaoInfo.billCode = "";
-    mFapiaoInfo.billContext = "";
-    mFapiaoInfo.billUse = "";
-
     //再将扫描出来的结构体的内容依次填入
-    mFapiaoInfo.billMoney = info.billMoney;
-    mFapiaoInfo.billCode = info.billCode;
-    mFapiaoInfo.billContext = info.billContext;
-    mFapiaoInfo.billUse = info.billUse;
+    mFapiaoInfo.billMoney = money;
+    mFapiaoInfo.billCode = code;
+    mFapiaoInfo.billContext = context;
+    mFapiaoInfo.billUse = use;
 
     //扫描获得了发票数据之后更新页面中的显示
     setBillInfo();
@@ -657,15 +659,18 @@ void MainWindow::setBillInfo()
 void MainWindow::on_confirmBtn_clicked()
 {
     //当要提交的发票号和扫描出来的发票号一致的时候才能正确地跳转回去
-//    if (mFapiaoCode == mFapiaoInfo.billCode)
-//    {
-//        this->setCurrentIndex(7);
-//        emit confirmAttDone(attType, attIndex);
-//    }
+    if (mFapiaoCode == mFapiaoInfo.billCode)
+    {
+        qDebug() << "比对成功";
+        this->setCurrentIndex(7);
+        emit confirmAttDone(attType, attIndex);
+    }
+    else
+        QMessageBox::warning(this, "发票号比对不通过", mFapiaoCode + "发票号比对不通过，请重新扫描");
 
-    this->setCurrentIndex(7);
+    //this->setCurrentIndex(7);
     //to do
-    emit confirmAttDone(attType, attIndex);
+    //emit confirmAttDone(attType, attIndex);
 
 }
 /**
@@ -674,6 +679,7 @@ void MainWindow::on_confirmBtn_clicked()
 void MainWindow::on_scanAgainBtn_clicked()
 {
     //to do
+    this->setCurrentIndex(8);
 }
 /*
 @brief:身份证
@@ -766,7 +772,7 @@ void MainWindow::on_postBillButton_clicked()
 }
 void MainWindow::dealQrDone()
 {
-
+    QString billCode = interfaceUser::getinstance()->getBillCode();
 }
 
 void MainWindow::on_ceShiButton_clicked()

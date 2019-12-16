@@ -33,7 +33,8 @@ public:
     void run();
 signals:
     void success();
-    void fapiaoDone(scanInfo info);
+    //void fapiaoDone(scanInfo info);
+    void fapiaoDone(QString code, QString money, QString context, QString use);
 public slots:
     void billReply(QNetworkReply *reply);
 private:
@@ -70,6 +71,7 @@ private:
     //飞机票相关
     bool abroadType;
     int abroadRowcount;
+    scanInfo scaninfo;
 };
 
 #endif // BILLIDENTIFY_H
