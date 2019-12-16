@@ -1,4 +1,4 @@
-#include "httprequest.h"
+﻿#include "httprequest.h"
 #include <QImage>
 #include <QBuffer>
 #include <QDateTime>

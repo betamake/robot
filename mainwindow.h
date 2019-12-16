@@ -29,6 +29,7 @@ public:
     ~MainWindow();
     void setCurrentIndex(int currentIndex); //实现页面跳转;
     void getDocumentsListWidget(int index);   //附件列表页实现
+    void ceshiButton();//测试人脸登录，后面删除。
     void userLogin(); //用户登录；
 
 signals:
@@ -45,7 +46,7 @@ private slots:
 
     void startEmit(int type, int index);    //获得要提交的票据的信息，用于和扫描的结果对比
 
-    void getBillInfo(scanInfo info);    //获得扫描的票据的信息
+    void getBillInfo(QString code, QString money, QString context, QString use);    //获得扫描的票据的信息
     void setBillInfo();     //扫描结果显示
     void dealScanDone();
     void dealQrDone();

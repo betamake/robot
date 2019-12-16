@@ -149,6 +149,7 @@ public:
     void getbillAttachment();
     void saveList();
     QByteArray InitGetRequest(QString url,QString obj); //获取远程图片，实现预览。
+    QMap<QString,QString> getMap();
 
 signals:
     void UserLoginDone(QString realName,qint16 loginMsg);

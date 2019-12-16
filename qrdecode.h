@@ -2,6 +2,7 @@
 #define QRDECODE_H
 
 #include <QObject>
+#include <QHttpMultiPart>
 #include <QCameraImageCapture>
 #include <QCamera>
 #include <QCameraViewfinder>
@@ -28,6 +29,7 @@
 #include <QList>
 #include <QCoreApplication>
 #include "interfaceuser.h"
+#include <QHttpPart>
 /*
 @brief:识别二维码
 @time:2019-10-17
@@ -82,12 +84,13 @@ public:
     }
     QrInformation QrInfo;
     static QrDecode *getinstance();
-    QByteArray getPixmapData(QString filePath,QImage image);
+    QString getPixmapData(QString filePath,QImage image);
     void run();
 
     void initCamera();
 signals:
     void qrCheckFailure();
+    void qrDone();
 
 public slots:
     void QrCheck();
