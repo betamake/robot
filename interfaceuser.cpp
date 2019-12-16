@@ -53,7 +53,7 @@ void interfaceUser::userLogin()
 */
 void interfaceUser::userLoginInterfaceReply(QNetworkReply *reply)
 {
-//    qDebug()<<"进入槽函数";
+    qDebug()<<"进入槽函数";
     if(reply->error() == QNetworkReply::NoError)
     {
         QByteArray all = reply->readAll();
@@ -280,7 +280,7 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                     QString attachmentId = billListValObject.value("id").toString();
                     QString attachmentName = billListValObject.value("name").toString();
                     QString attachmentPath =billListValObject.value("path").toString() ;
-                    QString attachmentType = billListValObject.value("type").toString();        //发票、其他
+                    QString attachmentType = billListValObject.value("type").toString();        //类型现在更换了，有三十多种，不再简单区分发票和附件
                     QString invoiceType = billListValObject.value("invoiceType").toString();    //0纸质发票，1电子发票
 
                     attachment info;

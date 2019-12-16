@@ -76,11 +76,16 @@ void MainWindow::on_accountLoginButton_clicked()
     QString password = ui->accountPasswordEdit->text();
     interfaceUser::getinstance()->setUsername(username);
     interfaceUser::getinstance()->setPassword(password);
-    interfaceUser::getinstance()->userLogin();
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
+    this->userLogin();
+
     ui->accountUserEdit->clear();
     ui->accountPasswordEdit->clear();
     ui->userLabel->show();
+}
+void MainWindow::userLogin()
+{
+    interfaceUser::getinstance()->userLogin();
+    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
 }
 /*
 @brief:处理账号返回信息，msg为登陆成功则跳转。
@@ -97,16 +102,16 @@ void MainWindow::dealUserLoginDone(QString realName,qint16 getMsg)
    if(msg == 0)
    {
        this->setCurrentIndex(5);
-//       qDebug()<<"当前用户："<<realName;
+       qDebug()<<"当前用户："<<realName;
        ui->userInfoLabel->setText(realName);
    }
    else {
        if (loginType =="face"){
-//           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
+           QMessageBox::information(this, QString::fromUtf8("人脸与用户民不匹配"),QString::fromUtf8("请重新注册"));
            this->setCurrentIndex(3);
        }
        else {
-//           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
+           QMessageBox::information(this, QString::fromUtf8("用户名或密码错误"),QString::fromUtf8("请核对用户名密码"));
        }
    }
 }
@@ -139,13 +144,12 @@ void MainWindow::on_faceButton_clicked()
 */
 void MainWindow::dealFaceCheckDone ()
 {
+    loginType ="face";
     CameraDevice::getinstance ()->quit ();
     CameraDevice::getinstance ()->wait ();
-    interfaceUser::getinstance()->userLogin();
-    loginType ="face";
-    connect(interfaceUser::getinstance(),SIGNAL(UserLoginDone(QString ,qint16 )),this,SLOT(dealUserLoginDone(QString ,qint16 )));
-    ui->accountUserEdit->clear();
-    ui->accountPasswordEdit->clear();
+
+    this->userLogin();
+//    this->on_accountLoginButton_clicked();
     ui->userLabel->show();
 }
 /*
@@ -433,95 +437,138 @@ void MainWindow::getAttachments()
 
     qDebug() << mAttachmentList.size();
 
-    int billCount = 0;  //发票数量
-    int otherCount = 0; //其他数量
+//    int billCount = 0;  //发票数量
+//    int otherCount = 0; //其他数量
 
-    mBillAttList.clear();
-    mOtherAttList.clear();
+//    mBillAttList.clear();
+//    mOtherAttList.clear();
+//    mAttachmentTypeList.clear();
 
     ui->billListWidget->clear();
 
-    //先获得发票和其他的数量
-    for(int i=0; i<mAttachmentList.size(); i++) {
-        attachment info = mAttachmentList.at(i);
-        if (info.attachmentType == "发票"){
-            billCount += 1;
-            mBillAttList.push_back(info);
+    mAttachmentTypeList.clear();
+    //获得mAttachmentTypeList
+
+    for (auto item = mAttachmentTypeList.constBegin(); item != mAttachmentTypeList.constEnd(); item++) {
+        QString curType = item.key();       //这是类型key
+        QString curTypeStr = item.value();    //这是类型名，写在标签上
+
+        QList<attachment> curList;
+
+        for(int i=0; i<mAttachmentList.size(); i++) {
+            attachment info = mAttachmentList.at(i);
+            QString strType = info.attachmentType;     //以 F+两位数字 作区分
+
+            if (strType == curType) {
+                curList.push_back(info);
+            }
         }
-        else{
-            otherCount += 1;
-            mOtherAttList.push_back(info);
+        int curCount = curList.size();
+        if (curCount > 0) {
+            QListWidget *billsList = new QListWidget();
+            QSize size = QSize(750, curCount * 110 + 50);
+            billsList->setFixedSize(size);
+
+            billsList->addItem(curTypeStr);
+
+            for (int i = 0; i<curCount; i++){
+                QListWidgetItem *item1 = new QListWidgetItem();
+                item1->setSizeHint(QSize(720, 110));
+
+                attachment attach = curList.at(i);
+                QString code = attach.attachmentId;
+                QString path = attach.attachmentPath;
+
+                billItem *newItem = new billItem();
+                newItem->setIndex(i);
+
+                newItem->setAttachmentType(curType);
+                if (curType == "F01") {
+                    QString type = attach.invoiceType;
+                    newItem->setType(type);
+                }
+                newItem->setCode(code);
+                newItem->setPath(path);
+
+                connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
+                connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
+
+                billsList->addItem(item1);
+                billsList->setItemWidget(item1, newItem);
+            }
+
+            QListWidgetItem *item = new QListWidgetItem();
+            item->setSizeHint(size);
+
+            ui->billListWidget->addItem(item);
+            ui->billListWidget->setItemWidget(item, billsList);
         }
+
     }
 
-    if (billCount > 0) {
-        QListWidget *billsList = new QListWidget();
-        QSize size = QSize(750, billCount * 110 + 50);
-        billsList->setFixedSize(size);
+//    for(int i=0; i<mAttachmentList.size(); i++) {
+//        attachment info = mAttachmentList.at(i);
+//        QString strType = info.attachmentType;     //以 F+两位数字 作区分
 
-        billsList->addItem("发票");
+//        int listCount = mAttachmentTypeList.size();
+//        if (listCount < 1)
+//            mAttachmentTypeList.push_back(strType);
+//        else {
+//            for (int j=0; j<listCount; j++) {
+//                if (mAttachmentTypeList.at(j) == strType)
+//                    break;
+//                else
+//                  mAttachmentTypeList.push_back(strType);
+//            }
+//        }
+//        if (info.attachmentType == "发票"){
+//            billCount += 1;
+//            mBillAttList.push_back(info);
+//        }
+//        else{
+//            otherCount += 1;
+//            mOtherAttList.push_back(info);
+//        }
+//    }
 
-        for (int i = 0; i<billCount; i++){
-            QListWidgetItem *item1 = new QListWidgetItem();
-            item1->setSizeHint(QSize(720, 110));
+//    if (billCount > 0) {
+//        QListWidget *billsList = new QListWidget();
+//        QSize size = QSize(750, billCount * 110 + 50);
+//        billsList->setFixedSize(size);
 
-            attachment attach = mBillAttList.at(i);
+//        billsList->addItem("发票");
 
-            QString type = attach.invoiceType;
-            QString code = attach.attachmentId;
-            QString path = attach.attachmentPath;
+//        for (int i = 0; i<billCount; i++){
+//            QListWidgetItem *item1 = new QListWidgetItem();
+//            item1->setSizeHint(QSize(720, 110));
+
+//            attachment attach = mBillAttList.at(i);
+
+//            QString type = attach.invoiceType;
+//            QString code = attach.attachmentId;
+//            QString path = attach.attachmentPath;
 
 
-            billItem *newItem = new billItem();
-            newItem->setIndex(i);
-            newItem->setType(type);
-            newItem->setCode(code);
-            newItem->setPath(path);
+//            billItem *newItem = new billItem();
+//            newItem->setIndex(i);
+//            newItem->setType(type);
+//            newItem->setCode(code);
+//            newItem->setPath(path);
 
-            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
-            connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
+//            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
+//            connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
 
-            billsList->addItem(item1);
-            billsList->setItemWidget(item1, newItem);
-        }
+//            billsList->addItem(item1);
+//            billsList->setItemWidget(item1, newItem);
+//        }
 
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(size);
+//        QListWidgetItem *item = new QListWidgetItem();
+//        item->setSizeHint(size);
 
-        ui->billListWidget->addItem(item);
-        ui->billListWidget->setItemWidget(item, billsList);
-    }
+//        ui->billListWidget->addItem(item);
+//        ui->billListWidget->setItemWidget(item, billsList);
+//    }
 
-    if (otherCount > 0) {
-        QListWidget *othersList = new QListWidget();
-        QSize size = QSize(750, otherCount * 110 + 50);
-        othersList->setFixedSize(size);
-
-        othersList->addItem("其他");
-
-        for (int i=0; i<otherCount; i++) {
-            QListWidgetItem *item1 = new QListWidgetItem();
-            item1->setSizeHint(QSize(720, 110));
-
-            attachment attach = mOtherAttList.at(i);
-            QString name = attach.attachmentName;
-
-            scheduleItem *newItem = new scheduleItem();
-            newItem->setTypeAndIndex(2, i);
-            newItem->setName(name);
-            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
-            connect(this, &MainWindow::confirmAttDone, newItem, &scheduleItem::connfirmed);
-
-            othersList->addItem(item1);
-            othersList->setItemWidget(item1, newItem);
-        }
-
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(size);
-
-        ui->billListWidget->addItem(item);
-        ui->billListWidget->setItemWidget(item, othersList);
-    }
 }
 /**
  * @brief 从附件列表对应项获得要提交的票据的信息，用于之后和扫描结果比对
@@ -576,6 +623,7 @@ void MainWindow::on_scanStartBtn_clicked()
     scanPage->moveToThread (scanPage); //解决类不在一个线程
     scanPage->start();
     connect(scanPage,SIGNAL(scanDone()),this,SLOT(dealScanDone()));
+
 
     //扫描成功并获取发票的信息后，跳转到详情页面
     // to do

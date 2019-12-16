@@ -64,7 +64,7 @@
     <rect>
      <x>300</x>
      <y>30</y>
-     <width>81</width>
+     <width>41</width>
      <height>31</height>
     </rect>
    </property>
@@ -74,15 +74,15 @@
     </font>
    </property>
    <property name="text">
-    <string>发票号：</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="billNumber">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>350</x>
      <y>30</y>
-     <width>201</width>
+     <width>231</width>
      <height>31</height>
     </rect>
    </property>

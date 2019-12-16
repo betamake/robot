@@ -41,6 +41,7 @@ typedef struct{
 
 typedef QList<attachment> attachmentList;
 
+
 class interfaceUser : public QObject
 {
     Q_OBJECT

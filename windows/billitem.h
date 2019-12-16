@@ -26,6 +26,7 @@ public:
     void setIndex(int index);
 
     void setType(QString type);
+    void setAttachmentType(QString type);
 
     void setCode(QString strCode);
     void setPath(QString strPath);
@@ -38,9 +39,6 @@ public slots:
 
 private slots:
     void on_billEmitBtn_clicked();
-
-
-
     void on_pushButton_clicked();
 
 private:
@@ -49,6 +47,7 @@ private:
 
     int iIndex;
     QString type;       //0为纸质发票，1为电子发票
+    QString attachmentType;     //附件类型
     QString billCode;
     QString billPath;
 

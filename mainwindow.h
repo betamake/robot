@@ -29,6 +29,7 @@ public:
     ~MainWindow();
     void setCurrentIndex(int currentIndex); //实现页面跳转;
     void getDocumentsListWidget(int index);   //附件列表页实现
+    void userLogin(); //用户登录；
 
 signals:
     void confirmAttDone(int type, int index);
@@ -108,9 +109,10 @@ private:
 
     QList<billInfo> mBillList;
     QList<attachment> mAttachmentList;
-    QList<attachment> mBillAttList;      //发票列表
-    QList<attachment> mOtherAttList;     //其他列表
-    int attType;    //票据类型  0为发票，1为其他
+//    QList<attachment> mBillAttList;      //发票列表=============>附件列表
+//    QList<attachment> mOtherAttList;     //其他列表=============>弃置
+    QMap<QString, QString>  mAttachmentTypeList;    //附件类型列表
+//    int attType;    //票据类型  0为发票，1为其他
     int attIndex;   //票据序号
 
     QString mFapiaoCode;    //需要提交的发票的code,用于比较扫描出来的是否一致
