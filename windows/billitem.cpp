@@ -89,15 +89,15 @@ void billItem::connfirmed(int index)
 void billItem::on_pushButton_clicked()
 {
     QString path = "http://211.157.179.73:9720/admin/review/view?path="+billPath;
-//    dialog  = new QDialog(this);
-//    dialog->resize(600,600);
-//    m_webView = new QWebEngineView(dialog);
-//    QStackedLayout* layout = new QStackedLayout(dialog);
-//    dialog->setLayout(layout);
-//    layout->addWidget(m_webView);
-//    qDebug()<<"path:"<<path;
-//    m_webView->load(QUrl(path));
-//    m_webView->resize(500,500);
-//    m_webView->show();
-//    dialog->show();
+    dialog  = new QDialog(this);
+    dialog->resize(600,600);
+    m_webView = new QWebEngineView(dialog);
+    QStackedLayout* layout = new QStackedLayout(dialog);
+    dialog->setLayout(layout);
+    layout->addWidget(m_webView);
+    qDebug()<<"path:"<<path;
+    m_webView->load(QUrl(path));
+    m_webView->resize(500,500);
+    m_webView->show();
+    dialog->show();
 }

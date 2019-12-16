@@ -649,11 +649,18 @@ void MainWindow::on_postBillButton_clicked()
     QrDecode::getinstance ()->QrInfo.getcamera ()->start();
     QrDecode::getinstance ()->moveToThread (QrDecode::getinstance ()); //解决类不在一个线程
     QrDecode::getinstance ()->start ();
-    connect(QrDecode::getinstance (),SIGNAL(qrDone()),this,SLOT(dealQrDone()));
+    connect(QrDecode::getinstance (),SIGNAL(qrDone(QString)),this,SLOT(dealQrDone(QString)));
 }
-void MainWindow::dealQrDone()
+void MainWindow::dealQrDone(QString billCode)
 {
-    QString billCode = interfaceUser::getinstance()->getBillCode();
+    QrDecode::getinstance ()->quit();
+    QrDecode::getinstance()->wait();
+    qDebug()<<"dealQrDone槽函数";
+    interfaceUser::getinstance()->setBillCode("FY2019120116");
+    interfaceUser::getinstance()->getbillAttachment();
+    connect(interfaceUser::getinstance(), &interfaceUser::sentDealAttachmentDone, this, &MainWindow::getAttachments);
+
+    this->setCurrentIndex(7);
 }
 
 void MainWindow::on_ceShiButton_clicked()
