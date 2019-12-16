@@ -77,9 +77,9 @@ void billItem::on_billEmitBtn_clicked()
     emit startBill(0, iIndex);
 }
 
-void billItem::connfirmed(int type, int index)
+void billItem::connfirmed(int index)
 {
-    if ((type == 0) && (index==iIndex))
+    if (index==iIndex)
     {
         ui->billEmitBtn->setText("已提交");
         ui->billEmitBtn->setDisabled(true);

@@ -35,7 +35,7 @@ signals:
     void startBill(int type, int index);
 
 public slots:
-    void connfirmed(int type, int index);
+    void connfirmed(int index);
 
 private slots:
     void on_billEmitBtn_clicked();

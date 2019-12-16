@@ -6,7 +6,6 @@
 #include "cameradevice.h"
 #include "facereg.h"
 #include "windows/billitem.h"
-#include "windows/scheduleitem.h"
 #include "voicecontrol.h"
 #include "qrdecode.h"
 #include "billidentify.h"
@@ -33,7 +32,7 @@ public:
     void userLogin(); //用户登录；
 
 signals:
-    void confirmAttDone(int type, int index);
+    void confirmAttDone(int index);
 
 private:
     void initView();

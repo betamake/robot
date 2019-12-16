@@ -350,87 +350,6 @@ void MainWindow::startBillEmit()
  */
 void MainWindow::getDocumentsListWidget(int index)
 {
-//    qDebug() << "打开了第" << index << "张票据" ;
-
-//    int billCount = 2;  //假设有2张发票
-//    int scheduleCount = 0;  //假设有0张会议日程
-//    int otherCount = 2; //假设有2张其他票据
-
-//    if (billCount > 0) {
-//        QListWidget *billsList = new QListWidget();
-//        QSize size = QSize(750, billCount * 110 + 50);
-//        billsList->setFixedSize(size);
-
-//        billsList->addItem("发票");
-
-//        for (int i = 0; i<billCount; i++){
-//            QListWidgetItem *item1 = new QListWidgetItem();
-//            item1->setSizeHint(QSize(720, 110));
-
-//            billItem *newItem = new billItem();
-//            newItem->setIndex(i);
-//            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
-
-//            billsList->addItem(item1);
-//            billsList->setItemWidget(item1, newItem);
-//        }
-
-//        QListWidgetItem *item = new QListWidgetItem();
-//        item->setSizeHint(size);
-
-//        ui->billListWidget->addItem(item);
-//        ui->billListWidget->setItemWidget(item, billsList);
-//    }
-//    if (scheduleCount > 0) {
-//        QListWidget *othersList = new QListWidget();
-//        QSize size = QSize(750, scheduleCount * 110 + 50);
-//        othersList->setFixedSize(size);
-
-//        othersList->addItem("会议日程");
-
-//        for (int i=0; i<scheduleCount; i++) {
-//            QListWidgetItem *item1 = new QListWidgetItem();
-//            item1->setSizeHint(QSize(720, 110));
-
-//            scheduleItem *newItem = new scheduleItem();
-//            newItem->setTypeAndIndex(1, i);
-//            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
-
-//            othersList->addItem(item1);
-//            othersList->setItemWidget(item1, newItem);
-//        }
-
-//        QListWidgetItem *item = new QListWidgetItem();
-//        item->setSizeHint(size);
-
-//        ui->billListWidget->addItem(item);
-//        ui->billListWidget->setItemWidget(item, othersList);
-//    }
-//    if (otherCount > 0) {
-//        QListWidget *othersList = new QListWidget();
-//        QSize size = QSize(750, otherCount * 110 + 50);
-//        othersList->setFixedSize(size);
-
-//        othersList->addItem("其他");
-
-//        for (int i=0; i<otherCount; i++) {
-//            QListWidgetItem *item1 = new QListWidgetItem();
-//            item1->setSizeHint(QSize(720, 110));
-
-//            scheduleItem *newItem = new scheduleItem();
-//            newItem->setTypeAndIndex(2, i);
-//            connect(newItem, &scheduleItem::startSchedule, this, &MainWindow::startEmit);
-
-//            othersList->addItem(item1);
-//            othersList->setItemWidget(item1, newItem);
-//        }
-
-//        QListWidgetItem *item = new QListWidgetItem();
-//        item->setSizeHint(size);
-
-//        ui->billListWidget->addItem(item);
-//        ui->billListWidget->setItemWidget(item, othersList);
-//    }
 }
 /**
  * @brief 获得票据附件列表并将它们显示在列表页中
@@ -445,17 +364,11 @@ void MainWindow::getAttachments()
 
     qDebug() << "mAttachmentList的数量为" << mAttachmentList.size();
 
-//    int billCount = 0;  //发票数量
-//    int otherCount = 0; //其他数量
-
-//    mBillAttList.clear();
-//    mOtherAttList.clear();
-//    mAttachmentTypeList.clear();
-
     ui->billListWidget->clear();
 
     mAttachmentTypeList.clear();
     //获得mAttachmentTypeList
+    mAttachmentTypeList = interfaceUser::getinstance()->getMap();
 
     for (auto item = mAttachmentTypeList.constBegin(); item != mAttachmentTypeList.constEnd(); item++) {
         QString curType = item.key();       //这是类型key
@@ -514,69 +427,6 @@ void MainWindow::getAttachments()
 
     }
 
-//    for(int i=0; i<mAttachmentList.size(); i++) {
-//        attachment info = mAttachmentList.at(i);
-//        QString strType = info.attachmentType;     //以 F+两位数字 作区分
-
-//        int listCount = mAttachmentTypeList.size();
-//        if (listCount < 1)
-//            mAttachmentTypeList.push_back(strType);
-//        else {
-//            for (int j=0; j<listCount; j++) {
-//                if (mAttachmentTypeList.at(j) == strType)
-//                    break;
-//                else
-//                  mAttachmentTypeList.push_back(strType);
-//            }
-//        }
-//        if (info.attachmentType == "发票"){
-//            billCount += 1;
-//            mBillAttList.push_back(info);
-//        }
-//        else{
-//            otherCount += 1;
-//            mOtherAttList.push_back(info);
-//        }
-//    }
-
-//    if (billCount > 0) {
-//        QListWidget *billsList = new QListWidget();
-//        QSize size = QSize(750, billCount * 110 + 50);
-//        billsList->setFixedSize(size);
-
-//        billsList->addItem("发票");
-
-//        for (int i = 0; i<billCount; i++){
-//            QListWidgetItem *item1 = new QListWidgetItem();
-//            item1->setSizeHint(QSize(720, 110));
-
-//            attachment attach = mBillAttList.at(i);
-
-//            QString type = attach.invoiceType;
-//            QString code = attach.attachmentId;
-//            QString path = attach.attachmentPath;
-
-
-//            billItem *newItem = new billItem();
-//            newItem->setIndex(i);
-//            newItem->setType(type);
-//            newItem->setCode(code);
-//            newItem->setPath(path);
-
-//            connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
-//            connect(this, &MainWindow::confirmAttDone, newItem, &billItem::connfirmed);
-
-//            billsList->addItem(item1);
-//            billsList->setItemWidget(item1, newItem);
-//        }
-
-//        QListWidgetItem *item = new QListWidgetItem();
-//        item->setSizeHint(size);
-
-//        ui->billListWidget->addItem(item);
-//        ui->billListWidget->setItemWidget(item, billsList);
-//    }
-
 }
 /**
  * @brief 从附件列表对应项获得要提交的票据的信息，用于之后和扫描结果比对
@@ -586,21 +436,10 @@ void MainWindow::getAttachments()
 void MainWindow::startEmit(int type, int index)
 {
     ui->stackedWidget->setCurrentIndex(8);
-    if (type == 0) {
-        //发票
-        //在发票列表中查找相应的发票，用于比较发票是否正确
-        attType = 0;
-        attIndex = index;
+//    attType = 0;
+    attIndex = index;
 
-        mFapiaoCode = mBillAttList.at(index).attachmentId;
-
-    } else {
-        //其他
-        attType = 1;
-        attIndex = index;
-
-        mFapiaoCode = mOtherAttList.at(index).attachmentId;
-    }
+    mFapiaoCode = mAttachmentList.at(index).attachmentId;
 }
 /**
  * @brief 票据列表页面提交完成按钮
@@ -702,7 +541,7 @@ void MainWindow::on_confirmBtn_clicked()
     {
         qDebug() << "比对成功";
         this->setCurrentIndex(7);
-        emit confirmAttDone(attType, attIndex);
+        emit confirmAttDone(attIndex);
     }
     else
         QMessageBox::warning(this, "发票号比对不通过", mFapiaoCode + "发票号比对不通过，请重新扫描");

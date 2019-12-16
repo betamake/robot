@@ -35,7 +35,6 @@ SOURCES += \
     scanpage.cpp \
     turing.cpp \
     windows/billitem.cpp \
-    windows/scheduleitem.cpp\
     qaudiolevel.cpp \
     voicecontrol.cpp
 
@@ -51,15 +50,13 @@ HEADERS += \
     scanpage.h \
     turing.h \
     windows/billitem.h \
-    windows/scheduleitem.h\
     qaudiolevel.h \
     voicecontrol.h
 
 
 FORMS += \
     mainwindow.ui \
-    windows/billitem.ui \
-    windows/scheduleitem.ui
+    windows/billitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -110,7 +110,7 @@
     </font>
    </property>
    <property name="text">
-    <string>提交发票</string>
+    <string>提交</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton">
