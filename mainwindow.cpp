@@ -398,6 +398,7 @@ void MainWindow::getAttachments()
 
                 attachment attach = curList.at(i);
                 QString code = attach.attachmentId;
+                QString name = attach.attachmentName;
                 QString path = attach.attachmentPath;
 
                 billItem *newItem = new billItem();
@@ -406,9 +407,11 @@ void MainWindow::getAttachments()
                 newItem->setAttachmentType(curType);
                 if (curType == "F01") {
                     QString type = attach.invoiceType;
+                    QString num = attach.invoiceNumber;
                     newItem->setType(type);
+                    newItem->setInvoiceNumber(num);
                 }
-                newItem->setCode(code);
+                newItem->setCode(name);
                 newItem->setPath(path);
 
                 connect(newItem, &billItem::startBill, this, &MainWindow::startEmit);
@@ -439,7 +442,10 @@ void MainWindow::startEmit(int type, int index)
 //    attType = 0;
     attIndex = index;
 
-    mFapiaoCode = mAttachmentList.at(index).attachmentId;
+    if (mAttachmentList.at(index).attachmentType == "F01") {
+        mFapiaoCode = mAttachmentList.at(index).attachmentId;
+    } else
+        mFapiaoCode = "";
 }
 /**
  * @brief 票据列表页面提交完成按钮
@@ -537,19 +543,16 @@ void MainWindow::setBillInfo()
 void MainWindow::on_confirmBtn_clicked()
 {
     //当要提交的发票号和扫描出来的发票号一致的时候才能正确地跳转回去
-    if (mFapiaoCode == mFapiaoInfo.billCode)
-    {
-        qDebug() << "比对成功";
-        this->setCurrentIndex(7);
-        emit confirmAttDone(attIndex);
+    if (mFapiaoCode != "") {
+        if (mFapiaoCode == mFapiaoInfo.billCode)
+        {
+            qDebug() << "比对成功";
+            this->setCurrentIndex(7);
+            emit confirmAttDone(attIndex);
+        }
+        else
+            QMessageBox::warning(this, "发票号比对不通过", mFapiaoCode + "发票号比对不通过，请重新扫描");
     }
-    else
-        QMessageBox::warning(this, "发票号比对不通过", mFapiaoCode + "发票号比对不通过，请重新扫描");
-
-    //this->setCurrentIndex(7);
-    //to do
-    //emit confirmAttDone(attType, attIndex);
-
 }
 /**
  * @brief 发票信息页面：重新扫描按钮

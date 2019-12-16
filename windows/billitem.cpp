@@ -31,18 +31,19 @@ void billItem::setIndex(int index)
 
 void billItem::setType(QString type)
 {
-    if (type == "F01") {
-        ui->radioButton->show();
-        ui->radioButton_2->show();
-        if(type == "0"){
-            ui->radioButton_2->setChecked(true);
-        }
-        else
-            ui->radioButton->setChecked(true);
-    } else {
-        ui->radioButton->hide();
-        ui->radioButton_2->hide();
+//    ui->radioButton->show();
+//    ui->radioButton_2->show();
+    if(type == "0"){
+        ui->radioButton_2->setChecked(true);
     }
+    else
+        ui->radioButton->setChecked(true);
+}
+
+void billItem::setInvoiceNumber(QString number)
+{
+    invoiceNum = number;
+    ui->invoiceNumber->setText(invoiceNum);
 }
 
 void billItem::setAttachmentType(QString type)
