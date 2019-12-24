@@ -1,4 +1,4 @@
-#include "facereg.h"
+﻿#include "facereg.h"
 faceReg *faceReg::instance =NULL;
 faceReg::faceReg(QObject *parent) : QThread(parent)
 {
