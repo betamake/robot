@@ -26,6 +26,8 @@ public:
     void setIndex(int index);
 
     void setType(QString type);
+    void setInvoiceNumber(QString number);
+
     void setAttachmentType(QString type);
 
     void setCode(QString strCode);
@@ -47,6 +49,7 @@ private:
 
     int iIndex;
     QString type;       //0为纸质发票，1为电子发票
+    QString invoiceNum;
     QString attachmentType;     //附件类型
     QString billCode;
     QString billPath;

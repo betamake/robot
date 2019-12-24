@@ -324,6 +324,7 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                     QString attachmentPath =billListValObject.value("path").toString() ;
                     QString attachmentType = billListValObject.value("type").toString();        //类型现在更换了，有三十多种，不再简单区分发票和附件
                     QString invoiceType = billListValObject.value("invoiceType").toString();    //0纸质发票，1电子发票
+                    QString invoiceNumber = billListValObject.value("invoiceNum").toString();
 
                     attachment info;
                     info.attachmentId = attachmentId;
@@ -331,6 +332,7 @@ void interfaceUser::dealbillAttachment(QNetworkReply *reply)
                     info.attachmentPath = attachmentPath;
                     info.attachmentType = attachmentType;
                     info.invoiceType = invoiceType;
+                    info.invoiceNumber = invoiceNumber;
                     insertAttachmentInfo(info);
                 }
                 emit sentDealAttachmentDone();

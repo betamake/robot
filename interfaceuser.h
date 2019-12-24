@@ -37,6 +37,7 @@ typedef struct{
     QString attachmentPath;
     QString attachmentType;
     QString invoiceType;
+    QString invoiceNumber;
 } attachment;
 
 typedef QList<attachment> attachmentList;
