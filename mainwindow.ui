@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="huanYingYe">
      <layout class="QGridLayout" name="gridLayout">
@@ -718,6 +718,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <property name="autoExclusive">
           <bool>true</bool>
          </property>
@@ -730,6 +733,9 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <property name="autoExclusive">
           <bool>true</bool>
@@ -744,6 +750,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <property name="autoExclusive">
           <bool>true</bool>
          </property>
@@ -756,6 +765,9 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <property name="autoExclusive">
           <bool>true</bool>
@@ -770,6 +782,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <property name="autoExclusive">
           <bool>true</bool>
          </property>
@@ -783,6 +798,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <property name="autoExclusive">
           <bool>true</bool>
          </property>
@@ -795,6 +813,9 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <property name="autoExclusive">
           <bool>true</bool>

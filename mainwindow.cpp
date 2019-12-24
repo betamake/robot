@@ -249,6 +249,9 @@ void MainWindow::on_firstButton_clicked()
     case 4:
         this->dealFaceRegSucess();
         break;
+    case 6:
+        ui->tableWidget->clearContents();
+        break;
     case 10:
         QrDecode::getinstance ()->quit();
         QrDecode::getinstance ()->wait();
@@ -280,6 +283,8 @@ void MainWindow::on_shouyePostButton_clicked()
         on_postBillButton_clicked();
     }
     this->on_zhichuButton_clicked();
+    ui->zhichuButton->setChecked(true); //
+    ui->zhichuButton->setFocus();
 }
 /**
  * @brief 获得票据列表
@@ -652,10 +657,8 @@ void MainWindow::on_postBillButton_clicked()
 }
 void MainWindow::dealQrDone(QString billCode)
 {
-    QrDecode::getinstance ()->quit();
-    QrDecode::getinstance()->wait();
     qDebug()<<"dealQrDone槽函数";
-    interfaceUser::getinstance()->setBillCode("FY2019120116");
+    interfaceUser::getinstance()->setBillCode(billCode);
     interfaceUser::getinstance()->getbillAttachment();
     connect(interfaceUser::getinstance(), &interfaceUser::sentDealAttachmentDone, this, &MainWindow::getAttachments);
 
