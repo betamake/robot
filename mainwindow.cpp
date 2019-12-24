@@ -131,8 +131,7 @@ void MainWindow::on_faceButton_clicked()
      CameraDevice::getinstance ()->CameraInfo.getcamera ()->start();
      CameraDevice::getinstance ()->moveToThread (CameraDevice::getinstance ()); //解决类不在一个线程
      CameraDevice::getinstance ()->start ();
-     // jump to facecheck page
-     this->setCurrentIndex(2);
+
      connect (CameraDevice::getinstance (),SIGNAL(faceCheckDone()),this,SLOT(dealFaceCheckDone()));
      connect (CameraDevice::getinstance (),SIGNAL(faceCheckFailure()),this,SLOT(dealFaceCheckFailure()));
 }
