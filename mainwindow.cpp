@@ -447,7 +447,7 @@ void MainWindow::startEmit(int type, int index)
     attIndex = index;
 
     if (mAttachmentList.at(index).attachmentType == "F01") {
-        mFapiaoCode = mAttachmentList.at(index).attachmentId;
+        mFapiaoCode = mAttachmentList.at(index).invoiceNumber;
     } else
         mFapiaoCode = "";
 }
